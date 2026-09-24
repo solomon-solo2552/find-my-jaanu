@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# Django
+media/
+staticfiles/
+*.log
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+build/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Misc
+coverage/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
