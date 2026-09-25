@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Message
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ("match", "sender", "message_type", "is_read", "created_at")
+    list_filter = ("message_type", "is_read")
+    search_fields = ("content", "sender__display_name")
