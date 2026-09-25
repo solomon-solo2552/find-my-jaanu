@@ -25,3 +25,4 @@ See `backend/README.md` and `frontend/README.md`.
 
 ## Progress Log
 - **Day 1:** Project scaffolding — Django + Next.js + PostgreSQL setup, first migration successful. 
+- **Day 2 (✅):** Database schema — all core models implemented, migrations applied, admin configured.
