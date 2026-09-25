@@ -24,4 +24,4 @@ A full-stack social matching platform built with **Next.js**, **Django**, and **
 See `backend/README.md` and `frontend/README.md`.
 
 ## Progress Log
-- **Day 1:** Project scaffolding — Django + Next.js + PostgreSQL setup.
+- **Day 1:** Project scaffolding — Django + Next.js + PostgreSQL setup, first migration successful. 
