@@ -27,3 +27,4 @@ See `backend/README.md` and `frontend/README.md`.
 - **Day 1:** Project scaffolding — Django + Next.js + PostgreSQL setup, first migration successful. 
 - **Day 2 (✅):** Database schema — all core models implemented, migrations applied, admin configured.
 - **Day 3 (✅):** Authentication API — JWT signup, login, refresh, /me verified via curl.
+- **Day 4 (✅):** Profiles API — CRUD, filters, photo upload, interests, seeding.
