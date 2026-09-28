@@ -29,3 +29,4 @@ See `backend/README.md` and `frontend/README.md`.
 - **Day 3 (✅):** Authentication API — JWT signup, login, refresh, /me verified via curl.
 - **Day 4 (✅):** Profiles API — CRUD, filters, photo upload, interests, seeding.
 - **Day 5 (✅):** Frontend auth flow — axios interceptors, Zustand store, signup/login pages, protected routes.
+- **Day 6 (✅):** Onboarding flow, profile view/edit pages, photo uploader, interest picker.
