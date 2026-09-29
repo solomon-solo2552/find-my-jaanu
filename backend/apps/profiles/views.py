@@ -170,3 +170,47 @@ class MyPhotoDeleteView(generics.DestroyAPIView):
     def get_queryset(self):
         profile = Profile.objects.get(user=self.request.user)
         return Photo.objects.filter(profile=profile)
+
+class DiscoverView(generics.ListAPIView):
+    """GET /api/profiles/discover - smart feed of profiles you haven't liked/passed."""
+
+    serializer_class = ProfileReadSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        my_profile = Profile.objects.filter(user=user).first()
+        if not my_profile:
+            return Profile.objects.none()
+
+        # ID's I've already interested with
+        from apps.matches.models import Like, Pass
+        from apps.safety.models import Block
+
+        liked_ids = Like.objects.filter(liker=my_profile).values_list("likee_id", flat=True)
+        passed_ids = Pass.objects.filter(passer=my_profile).values_list("passed_id", flat=True)
+        blocked_by_me = Block.objects.filter(blocker=my_profile).values_list("blocked_id", flat=True)
+        blocked_me = Block.objects.filter(blocked=my_profile).values_list("blocker_id", flat=True)
+
+        excluded_ids = set(liked_ids) | set(passed_ids) | set(blocked_by_me) | set(blocked_me)
+
+        excluded_ids.add(my_profile.id)
+
+        qs = (
+            Profile.objects.filter(
+                is_visible=True,
+                gender=my_profile.interested_in,
+                interested_in=my_profile.gender,
+            )
+            .exclude(id__in=excluded_ids)
+            .select_related("user")
+            .prefetch_related("interests__interest", "photos")
+            .order_by("-last_active")
+        )
+
+        # Optional filters (still useful even in discover)
+        city = self.request.query_params.get("city")
+        if city:
+            qs = qs.filter(city__icontains=city)
+
+        return qs

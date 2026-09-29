@@ -28,10 +28,15 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-gray-600 hidden sm:inline">
-                <User className="w-4 h-4 inline mr-1" />
-                {user?.email}
-              </span>
+              <Link href="/discover" className="text-sm text-gray-700 hover:text-pink-600 font-medium">
+                Discover
+              </Link>
+              <Link href="/matches" className="text-sm text-gray-700 hover:text:pink-600 font-medium">
+                Matches
+              </Link>
+              <Link href="/profile" className="text-sm text-gray-700 hover:text-pink-600 font-medium">
+                Profile
+              </Link>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-1" />
                 Logout

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, Trash2, Star, Loader2 } from "lucide-react";
 import clsx from "clsx";
-import { Photo, profilesApi } from "@/lib/profiles";
+import { Photo, profilesApi, photoUrl } from "@/lib/profiles";
 
 interface Props {
   photos: Photo[];
@@ -92,7 +92,7 @@ export function PhotoUploader({ photos, onChange, max = 6 }: Props) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={photo.image}
+              src={photoUrl(photo.image)}
               alt={`Photo ${index + 1}`}
               className="w-full h-full object-cover"
             />

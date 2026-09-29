@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Loader2, MapPin, Edit, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { RequireAuth } from "@/components/providers/RequireAuth";
-import { profilesApi, Profile } from "@/lib/profiles";
+import { profilesApi, Profile, photoUrl } from "@/lib/profiles";
 
 export default function ProfilePage() {
   return (
@@ -57,7 +57,7 @@ function ProfileView() {
             {primaryPhoto ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={primaryPhoto.image}
+                src={photoUrl(primaryPhoto.image)}
                 alt={profile.display_name}
                 className="w-full h-full object-cover"
               />
@@ -114,7 +114,7 @@ function ProfileView() {
                 {profile.photos.map((p) => (
                   <div key={p.id} className="relative aspect-square rounded-lg overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.image} alt="" className="w-full h-full object-cover" />
+                    <img src={photoUrl(p.image)} alt="" className="w-full h-full object-cover" />
                     {p.is_primary && (
                       <Star className="w-3 h-3 fill-pink-600 text-pink-600 absolute top-1 right-1" />
                     )}

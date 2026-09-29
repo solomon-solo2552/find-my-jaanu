@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Like, Match
+from .models import *
 
 
 @admin.register(Like)
@@ -14,3 +14,7 @@ class LikeAdmin(admin.ModelAdmin):
 class MatchAdmin(admin.ModelAdmin):
     list_display = ("profile_a", "profile_b", "is_active", "matched_at")
     list_filter = ("is_active",)
+
+@admin.register(Pass)
+class PassAdmin(admin.ModelAdmin):
+    list_display = ("passer", "passed", "created_at")

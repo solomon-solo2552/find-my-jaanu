@@ -67,3 +67,37 @@ class Match(models.Model):
 
     def __str__(self):
         return f"Match: {self.profile_a.display_name} ↔ {self.profile_b.display_name}"
+
+
+class Pass(models.Model):
+    """Records when a user explicitly skips a profile - prevents seeing them again."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    passer = models.ForeignKey(
+        "profiles.Profile",
+        on_delete=models.CASCADE,
+        related_name="passes_given",
+    )
+
+    passed = models.ForeignKey(
+        "profiles.Profile",
+        on_delete=models.CASCADE,
+        related_name="passes_received",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "passes"
+        unique_together = ("passer", "passed")
+        indexes = [models.Index(fields=["passer", "passed"])]
+        constraints = [
+            models.CheckConstraint(
+                check=~models.Q(passer=models.F("passed")),
+                name="prevent_self_pass",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.passer.display_name} passed {self.passed.display_name}"
+    

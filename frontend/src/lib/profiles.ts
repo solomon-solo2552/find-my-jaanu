@@ -1,5 +1,18 @@
 import api from "./api";
 
+const API_ORIGIN =
+  (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api").replace(
+    /\/api\/?$/,
+    ""
+  );
+
+
+export const photoUrl = (path: string | null | undefined): string => {
+  if (!path) return "";
+  if (/^http?:\/\//i.test(path)) return path;
+  return `${API_ORIGIN}${path.startsWith("/") ? path : "/" + path}`;
+};
+
 export interface Interest {
   id: number;
   name: string;
