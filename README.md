@@ -33,3 +33,4 @@ See `backend/README.md` and `frontend/README.md`.
 - **Day 7 (✅):** Swipe matching — Discover feed, Like/Pass, auto-match, match modal.
 - **Day 8 (✅):** Matches list page, unmatch flow, new-match badge, chat placeholder.
 - **Day 9 (✅):** Real-time chat — Django Channels, JWT WS auth, live messaging, read receipts.
+- **Day 10 (✅):** Safety — Report & Block with match deactivation and discover exclusion.
