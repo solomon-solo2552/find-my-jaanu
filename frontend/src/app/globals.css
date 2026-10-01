@@ -12,9 +12,10 @@
   }
 }
 
+/* Force light mode for the app - remove or customize later if you want dark mode */
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: #171717;
+  background: #ffffff;
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -30,3 +31,4 @@ input::placeholder,
 textarea::placeholder {
   color: #9ca3af;          /* gray-400 */
 }
+

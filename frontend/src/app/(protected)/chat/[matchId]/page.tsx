@@ -205,7 +205,7 @@ const handleBlock = async () => {
       setMenuOpen(false);
       setReportOpen(true);
     }}
-    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+    className="px-4 py-2 text-sm text-gray-900 font-medium hover:bg-gray-50 w-full text-left"
   >
     🚩 Report
   </button>
@@ -214,7 +214,7 @@ const handleBlock = async () => {
       setMenuOpen(false);
       setConfirmBlock(true);
     }}
-    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+    className="px-4 py-2 text-sm text-gray-900 font-medium hover:bg-gray-50 w-full text-left"
   >
     🚫 Block
   </button>

@@ -75,10 +75,10 @@ export function ReportModal({ open, displayName, onClose, onSubmit }: Props) {
                   type="button"
                   onClick={() => setReason(r.value)}
                   className={clsx(
-                    "w-full text-left px-4 py-2.5 rounded-lg border transition",
+                    "w-full text-left px-4 py-2.5 rounded-lg border transition font-medium",
                     reason === r.value
                       ? "border-pink-500 bg-pink-50 text-pink-700"
-                      : "border-gray-200 hover:border-pink-300"
+                      : "border-gray-200 bg-white text-gray-900 hover:border-pink-300 hover:bg-gray-50"
                   )}
                 >
                   {r.label}
