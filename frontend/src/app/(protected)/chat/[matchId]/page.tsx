@@ -12,6 +12,8 @@ import { useAuthStore } from "@/store/auth";
 import { chatApi, Message, MatchInfo } from "@/lib/chat";
 import { matchesApi } from "@/lib/matches";
 import { absoluteMediaUrl } from "@/lib/api";
+import { safetyApi, ReportReason } from "@/lib/safety";
+import { ReportModal } from "@/components/safety/ReportModal";
 
 export default function ChatPage() {
   return (
@@ -35,6 +37,9 @@ function Chat() {
   const [confirmUnmatch, setConfirmUnmatch] = useState(false);
   const [unmatching, setUnmatching] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [confirmBlock, setConfirmBlock] = useState(false);
+  const [blocking, setBlocking] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const lastMessageIdRef = useRef<string | null>(null);
@@ -110,6 +115,25 @@ function Chat() {
     }
   };
 
+  const handleReport = async (reason: ReportReason, details: string) => {
+  await safetyApi.report(matchInfo!.other_profile.id, reason, details);
+  // After a report, offer to also block
+  setConfirmBlock(true);
+};
+
+const handleBlock = async () => {
+  if (!matchInfo) return;
+  setBlocking(true);
+  try {
+    await safetyApi.block(matchInfo.other_profile.id);
+    router.push("/matches");
+  } catch {
+    setError("Failed to block.");
+    setBlocking(false);
+    setConfirmBlock(false);
+  }
+};
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-pink-50">
@@ -175,17 +199,36 @@ function Chat() {
                 className="fixed inset-0 z-10"
                 onClick={() => setMenuOpen(false)}
               />
-              <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20 min-w-[140px]">
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setConfirmUnmatch(true);
-                  }}
-                  className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
-                >
-                  Unmatch
-                </button>
-              </div>
+              <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20 min-w-[180px]">
+  <button
+    onClick={() => {
+      setMenuOpen(false);
+      setReportOpen(true);
+    }}
+    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+  >
+    🚩 Report
+  </button>
+  <button
+    onClick={() => {
+      setMenuOpen(false);
+      setConfirmBlock(true);
+    }}
+    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+  >
+    🚫 Block
+  </button>
+  <div className="border-t border-gray-100 my-1" />
+  <button
+    onClick={() => {
+      setMenuOpen(false);
+      setConfirmUnmatch(true);
+    }}
+    className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+  >
+    Unmatch
+  </button>
+</div>
             </>
           )}
         </div>
@@ -230,6 +273,24 @@ function Chat() {
         onConfirm={handleUnmatch}
         onCancel={() => setConfirmUnmatch(false)}
       />
+
+      <ReportModal
+  open={reportOpen}
+  displayName={matchInfo.other_profile.display_name}
+  onClose={() => setReportOpen(false)}
+  onSubmit={handleReport}
+/>
+
+<ConfirmDialog
+  open={confirmBlock}
+  title="Block this user?"
+  description={`${matchInfo.other_profile.display_name} won't be able to see you or message you. This will also end your match.`}
+  confirmLabel="Block"
+  destructive
+  loading={blocking}
+  onConfirm={handleBlock}
+  onCancel={() => setConfirmBlock(false)}
+/>
     </main>
   );
 }

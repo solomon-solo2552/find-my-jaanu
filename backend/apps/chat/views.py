@@ -104,6 +104,15 @@ class SendMessageView(APIView):
         if not match:
             return Response({"detail": "Match not found."}, status=404)
 
+        # Extra check: any block between the two parties?
+        from apps.safety.models import Block
+
+        other = match.get_other_profile(me)
+        if Block.objects.filter(
+            Q(blocker=me, blocked=other) | Q(blocker=other, blocked=me)
+        ).exists():
+            return Response({"detail": "You cannot send messages to this user."}, status=403)
+
         content = (request.data.get("content") or "").strip()
         if not content:
             return Response({"detail": "Empty message."}, status=400)
