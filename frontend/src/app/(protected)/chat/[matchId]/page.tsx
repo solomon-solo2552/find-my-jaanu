@@ -12,6 +12,7 @@ import { useAuthStore } from "@/store/auth";
 import { chatApi, Message, MatchInfo } from "@/lib/chat";
 import { matchesApi } from "@/lib/matches";
 import { useChatSocket } from "@/hooks/useChatSocket";
+import { absoluteMediaUrl } from "@/lib/api";
 
 export default function ChatPage() {
   return (
@@ -123,10 +124,10 @@ function Chat() {
         </Link>
 
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          {matchInfo.other_profile.photo ? (
+          {absoluteMediaUrl(matchInfo.other_profile.photo) ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={matchInfo.other_profile.photo}
+              src={absoluteMediaUrl(matchInfo.other_profile.photo) as string}
               alt={matchInfo.other_profile.display_name}
               className="w-10 h-10 rounded-full object-cover"
             />

@@ -97,3 +97,15 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+
+/**
+ * If a media URL is relative (starts with /), prefix it with the backend host.
+ * Ensures the URL always resolves regardless of what the API returns.
+ */
+export function absoluteMediaUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  const backendHost = API_URL.replace(/\/api\/?$/, "");
+  return `${backendHost}${url}`;
+}

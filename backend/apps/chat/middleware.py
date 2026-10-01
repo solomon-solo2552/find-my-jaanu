@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import parse_qs
 
 from channels.db import database_sync_to_async
@@ -7,6 +8,7 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 @database_sync_to_async
@@ -28,9 +30,12 @@ class JWTAuthMiddleware(BaseMiddleware):
         query_params = parse_qs(query_string)
         token = query_params.get("token", [None])[0]
 
+        logger.warning(f">>> WS AUTH: token={'present' if token else 'MISSING'}")
+
         if token:
             scope["user"] = await get_user_from_token(token)
+            logger.warning(f">>> WS AUTH: user={scope['user']}")
         else:
             scope["user"] = AnonymousUser()
-            
+
         return await super().__call__(scope, receive, send)

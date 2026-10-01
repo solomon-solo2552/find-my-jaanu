@@ -15,12 +15,20 @@ export function useChatSocket({ matchId, onMessage }: UseChatSocketOptions) {
   const [connected, setConnected] = useState(false);
   const reconnectAttempts = useRef(0);
   const maxReconnect = 5;
+  const shouldReconnect = useRef(true);
+  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onMessageRef = useRef(onMessage);
   onMessageRef.current = onMessage;
 
   const connect = useCallback(() => {
     if (!matchId) return;
+
+    // Guard: don't open a second socket while one is already connecting/open
+    const existing = wsRef.current;
+    if (existing && (existing.readyState === WebSocket.CONNECTING || existing.readyState === WebSocket.OPEN)) {
+      return;
+    }
 
     const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
     if (!token) return;
@@ -46,24 +54,53 @@ export function useChatSocket({ matchId, onMessage }: UseChatSocketOptions) {
       }
     };
 
-    ws.onclose = () => {
+    ws.onclose = (event) => {
       setConnected(false);
+      wsRef.current = null;
+
+      // Only reconnect if this wasn't a deliberate close
+      if (!shouldReconnect.current) return;
+      // Auth failures — don't keep retrying with a dead token
+      if (event.code === 4001 || event.code === 4002 || event.code === 4003) {
+        return;
+      }
+
       if (reconnectAttempts.current < maxReconnect) {
         reconnectAttempts.current += 1;
         const delay = Math.min(1000 * 2 ** reconnectAttempts.current, 10000);
-        setTimeout(connect, delay);
+        reconnectTimer.current = setTimeout(connect, delay);
       }
     };
 
     ws.onerror = () => {
-      // onclose fires next
+      // onclose will follow; don't double-handle
     };
   }, [matchId]);
 
   useEffect(() => {
+    shouldReconnect.current = true;
     connect();
+
     return () => {
-      wsRef.current?.close();
+      // Stop reconnect attempts
+      shouldReconnect.current = false;
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+        reconnectTimer.current = null;
+      }
+
+      const ws = wsRef.current;
+      if (!ws) return;
+
+      if (ws.readyState === WebSocket.CONNECTING) {
+        // Wait for handshake to finish before closing (avoids the React warning)
+        ws.onopen = () => ws.close();
+        ws.onerror = () => {};
+        ws.onclose = () => {};
+      } else if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+
       wsRef.current = null;
     };
   }, [connect]);

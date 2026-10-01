@@ -146,3 +146,6 @@ CHANNEL_LAYERS = {
         },
     }
 }
+
+# # TEMP DEBUG
+# print(f"DEBUG: INSTALLED_APPS[0] = {INSTALLED_APPS[0]!r}")

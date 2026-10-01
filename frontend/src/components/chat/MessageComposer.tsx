@@ -33,8 +33,8 @@ export function MessageComposer({ onSend, disabled }: Props) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKey}
-          disabled={disabled}
-          placeholder={disabled ? "Connecting…" : "Type a message…"}
+          // ⚠️ Changed: only block sending, not typing
+          placeholder="Type a message…"
           className="flex-1 px-4 py-2.5 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 max-h-32"
           style={{ minHeight: 44 }}
         />
@@ -42,6 +42,7 @@ export function MessageComposer({ onSend, disabled }: Props) {
           onClick={handleSend}
           disabled={disabled || !text.trim()}
           className="p-3 rounded-full bg-pink-600 text-white hover:bg-pink-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          title={disabled ? "Connecting…" : "Send"}
         >
           <Send className="w-5 h-5" />
         </button>
