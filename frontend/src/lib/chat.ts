@@ -31,4 +31,9 @@ export const chatApi = {
         const res = await api.get(`/chat/${matchId}/messages/`);
         return res.data;
     },
+
+    sendMessage: async (matchId: string, content: string): Promise<Message> => {
+        const res = await api.post(`/chat/${matchId}/send/`, { content });
+        return res.data;
+    },
 };

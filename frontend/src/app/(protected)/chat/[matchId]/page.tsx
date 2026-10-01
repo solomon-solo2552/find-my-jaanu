@@ -11,7 +11,6 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useAuthStore } from "@/store/auth";
 import { chatApi, Message, MatchInfo } from "@/lib/chat";
 import { matchesApi } from "@/lib/matches";
-import { useChatSocket } from "@/hooks/useChatSocket";
 import { absoluteMediaUrl } from "@/lib/api";
 
 export default function ChatPage() {
@@ -32,23 +31,20 @@ function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
   const [confirmUnmatch, setConfirmUnmatch] = useState(false);
   const [unmatching, setUnmatching] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastMessageIdRef = useRef<string | null>(null);
 
-  // Load match info + message history
+  // Load match info once
   useEffect(() => {
     (async () => {
       try {
-        const [info, history] = await Promise.all([
-          chatApi.getMatchInfo(matchId),
-          chatApi.getMessages(matchId),
-        ]);
+        const info = await chatApi.getMatchInfo(matchId);
         setMatchInfo(info);
-        setMessages(history.results);
       } catch (err: any) {
         if (err.response?.status === 404) {
           setError("This match no longer exists.");
@@ -61,27 +57,45 @@ function Chat() {
     })();
   }, [matchId]);
 
-  // Handle incoming WS message
-  const handleIncoming = useCallback((msg: Message) => {
-    setMessages((prev) => {
-      // Dedupe by ID (in case our optimistic message got a WS echo)
-      if (prev.some((m) => m.id === msg.id)) return prev;
-      return [...prev, msg];
-    });
-  }, []);
+  // Poll messages every 3 seconds
+  const fetchMessages = useCallback(async () => {
+    try {
+      const res = await chatApi.getMessages(matchId);
+      setMessages(res.results);
+    } catch {
+      // silent
+    }
+  }, [matchId]);
 
-  const { connected, send } = useChatSocket({
-    matchId,
-    onMessage: handleIncoming,
-  });
-
-  // Auto-scroll on new messages
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!matchInfo) return;
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 3000);
+    return () => clearInterval(interval);
+  }, [matchInfo, fetchMessages]);
+
+  // Auto-scroll only when a new message appears
+  useEffect(() => {
+    const last = messages[messages.length - 1];
+    if (last && last.id !== lastMessageIdRef.current) {
+      lastMessageIdRef.current = last.id;
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
-  const handleSend = (content: string): boolean => {
-    return send(content);
+  const handleSend = async (content: string): Promise<boolean> => {
+    if (sending) return false;
+    setSending(true);
+    try {
+      const newMsg = await chatApi.sendMessage(matchId, content);
+      setMessages((prev) => [...prev, newMsg]);
+      return true;
+    } catch {
+      setError("Failed to send message.");
+      return false;
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleUnmatch = async () => {
@@ -141,12 +155,8 @@ function Chat() {
               {matchInfo.other_profile.display_name}
             </h2>
             <p className="text-xs text-gray-500 flex items-center gap-1">
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  connected ? "bg-green-500" : "bg-gray-400"
-                }`}
-              />
-              {connected ? "Online" : "Connecting…"}
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              Active
             </p>
           </div>
         </div>
@@ -182,10 +192,7 @@ function Chat() {
       </header>
 
       {/* Messages */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2"
-      >
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 text-sm my-10">
             <p className="font-medium mb-1">You matched! 🎉</p>
@@ -211,7 +218,7 @@ function Chat() {
       </div>
 
       {/* Composer */}
-      <MessageComposer onSend={handleSend} disabled={!connected} />
+      <MessageComposer onSend={handleSend} disabled={sending} />
 
       <ConfirmDialog
         open={confirmUnmatch}
