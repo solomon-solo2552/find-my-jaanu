@@ -27,6 +27,16 @@ export interface Photo {
   uploaded_at: string;
 }
 
+export interface ProfileRelation {
+  is_self: boolean;
+  liked_by_me: boolean;
+  passed_by_me: boolean;
+  matched: boolean;
+  match_id: string | null;
+  blocked_by_me: boolean;
+  blocked_me: boolean;
+}
+
 export interface Profile {
   id: string;
   user_email: string;
@@ -46,6 +56,7 @@ export interface Profile {
   updated_at: string;
   interests: Interest[];
   photos: Photo[];
+  relation?: ProfileRelation;
 }
 
 export interface ProfileWritePayload {

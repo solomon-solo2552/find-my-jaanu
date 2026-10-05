@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MessageCircle, MoreVertical } from "lucide-react";
 import { useState } from "react";
 import { Match } from "@/lib/matches";
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function MatchCard({ match, onUnmatch }: Props) {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const other = match.other_profile;
   const primaryPhoto = other.photos.find((p) => p.is_primary) || other.photos[0];
@@ -19,15 +21,24 @@ export function MatchCard({ match, onUnmatch }: Props) {
 
   return (
     <div className="relative bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100">
-      <Link href={`/chat/${match.id}`} className="flex items-center gap-4 p-3">
-        {/* Avatar */}
-        <div className="relative flex-shrink-0">
+      <div
+        className="flex items-center gap-4 p-3 cursor-pointer"
+        onClick={() => router.push(`/chat/${match.id}`)}
+      >
+        {/* Avatar - clicking goes to profile */}
+        <div 
+          className="relative flex-shrink-0"
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/profile/${other.id}`);
+          }}
+        >
           {primaryPhoto ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={primaryPhoto.image}
               alt={other.display_name}
-              className="w-16 h-16 rounded-full object-cover border-2 border-pink-100"
+              className="w-16 h-16 rounded-full object-cover border-2 border-pink-100 hover:border-pink-400 transition"
             />
           ) : (
             <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold text-lg">
@@ -60,7 +71,7 @@ export function MatchCard({ match, onUnmatch }: Props) {
             </p>
           )}
         </div>
-      </Link>
+      </div>
 
       {/* Menu button */}
       <button

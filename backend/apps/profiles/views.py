@@ -60,12 +60,54 @@ class MyProfileView(APIView):
 
 
 class ProfileDetailView(generics.RetrieveAPIView):
-    """GET /api/profiles/<uuid>/ — view someone else's profile."""
+    """GET /api/profiles/<uuid>/ - view someone else's profile with my relation to them."""
 
-    queryset = Profile.objects.filter(is_visible=True).select_related("user")
     serializer_class = ProfileReadSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = "id"
+
+    def get_queryset(self):
+        # Only visible profiles, excluding myself
+        return Profile.objects.filter(is_visible=True).select_related("user")
+
+    def retrieve(self, request, *args, **kwargs):
+        profile = self.get_object()
+        me = Profile.objects.filter(user=request.user).first()
+
+        # Base profile data
+        data = self.get_serializer(profile).data
+
+        # Relation info
+        relation = {
+            "is_self": me and me.id == profile.id,
+            "liked_by_me": False,
+            "passed_by_me": False,
+            "matched": False,
+            "match_id": None,
+            "blocked_by_me": False,
+            "blocked_me": False,
+        }
+
+        if me and me.id != profile.id:
+            from apps.matches.models import Like, Match, Pass
+            from apps.safety.models import Block
+            from django.db.models import Q
+
+            relation["liked_by_me"] = Like.objects.filter(liker=me, likee=profile).exists()
+            relation["passed_by_me"] = Pass.objects.filter(passer=me, passed=profile).exists()
+            relation["blocked_by_me"] = Block.objects.filter(blocker=me, blocked=profile).exists()
+            relation["blocked_me"] = Block.objects.filter(blocker=profile, blocked=me).exists()
+
+            match = Match.objects.filter(
+                Q(profile_a=me, profile_b=profile) | Q(profile_a=profile, profile_b=me),
+                is_active=True,
+            ).first()
+            if match:
+                relation["matched"] = True
+                relation["match_id"] = str(match.id)
+
+        data["relation"] = relation
+        return Response(data)
 
 
 class ProfileBrowseView(generics.ListAPIView):

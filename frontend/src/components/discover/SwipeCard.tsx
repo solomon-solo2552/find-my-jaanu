@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { MapPin, Star } from "lucide-react";
 import { Profile, photoUrl } from "@/lib/profiles";
+import Link from "next/link";
 
 interface Props {
   profile: Profile;
@@ -74,7 +75,6 @@ export function SwipeCard({ profile, onSwipe, isTop }: Props) {
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white pointer-events-none">
           <h2 className="text-2xl font-bold flex items-center gap-2">
             {profile.display_name}, {profile.age}
-            {profile.is_verified_dummy && <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />}
           </h2>
           {(profile.city || profile.country) && (
             <p className="text-sm text-white/80 flex items-center gap-1 mt-1">
@@ -96,6 +96,15 @@ export function SwipeCard({ profile, onSwipe, isTop }: Props) {
                 </span>
               ))}
             </div>
+          )}
+
+          {isTop && (
+            <Link
+              href={`/profile/${profile.id}`}
+              className="mt-3 inline-flex items-center text-xs bg-white/20 backdrop-blur px-3 py-1.5 rounded-full hover:bg-white/30 transition pointer-events-auto"
+            >
+              View full profile →
+            </Link>
           )}
         </div>
       </div>
