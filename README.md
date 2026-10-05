@@ -36,3 +36,4 @@ See `backend/README.md` and `frontend/README.md`.
 - **Day 10 (✅):** Safety — Report & Block with match deactivation and discover exclusion.
 - **Day 11 (✅):** UX polish — toasts, skeletons, empty states, 404, error boundary, blocked users page.
 - **Day 12 (✅):** Fake user seeding for populated demo — 25 users, photos, matches, chat history.
+- **Day 13 (✅):** Public profile view with photo carousel, relation states, and full actions.
