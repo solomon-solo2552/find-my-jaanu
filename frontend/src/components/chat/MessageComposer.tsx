@@ -35,7 +35,7 @@ export function MessageComposer({ onSend, disabled }: Props) {
           onKeyDown={handleKey}
           // ⚠️ Changed: only block sending, not typing
           placeholder="Type a message…"
-          className="flex-1 px-4 py-2.5 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 max-h-32"
+          className="flex-1 px-4 py-2.5 border border-gray-300 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 max-h-32 text-gray-900 bg-white placeholder:text-gray-400"
           style={{ minHeight: 44 }}
         />
         <button

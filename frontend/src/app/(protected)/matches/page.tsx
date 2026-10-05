@@ -9,6 +9,9 @@ import { MatchCard } from "@/components/matches/MatchCard";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { matchesApi, Match } from "@/lib/matches";
 import { formatRelativeTime } from "@/lib/time";
+import { notify, errorMessage } from "@/lib/toast";
+import { MatchesSkeleton } from "@/components/skeletons/MatchesSkeleton";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default function MatchesPage() {
   return (
@@ -49,8 +52,8 @@ function Matches() {
       await matchesApi.unmatch(unmatchTarget.id);
       setMatches((prev) => prev.filter((m) => m.id !== unmatchTarget.id));
       setUnmatchTarget(null);
-    } catch {
-      setError("Failed to unmatch. Try again.");
+    } catch (err) {
+      notify.error(errorMessage(err, "Failed to unmatch."));
     } finally {
       setUnmatching(false);
     }
@@ -58,9 +61,14 @@ function Matches() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-pink-50">
-        <Loader2 className="w-10 h-10 animate-spin text-pink-600" />
-      </div>
+      <main className="min-h-screen bg-pink-50 py-6 px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold text-pink-600">Matches</h1>
+          </div>
+          <MatchesSkeleton />
+        </div>
+      </main>
     );
   }
 
@@ -87,21 +95,13 @@ function Matches() {
         )}
 
         {matches.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-10 text-center">
-            <Heart className="w-16 h-16 text-pink-300 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              No matches yet
-            </h2>
-            <p className="text-sm text-gray-600 mb-6">
-              Start discovering people and swipe right to match.
-            </p>
-            <Link href="/discover">
-              <Button>
-                <Compass className="w-4 h-4 mr-2" />
-                Find Your Jaanu
-              </Button>
-            </Link>
-          </div>
+          <EmptyState
+            icon={Heart}
+            title="No matches yet"
+            description="Start discovering people and swipe right to match."
+            actionLabel="Find Your Jaanu"
+            actionHref="/discover"
+          />
         ) : (
           <>
             {/* New matches row */}

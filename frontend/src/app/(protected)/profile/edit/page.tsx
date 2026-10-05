@@ -14,6 +14,7 @@ import { InterestPicker } from "@/components/profile/InterestPicker";
 import { PhotoUploader } from "@/components/profile/PhotoUploader";
 import { RequireAuth } from "@/components/providers/RequireAuth";
 import { profilesApi, Profile, Interest, Photo } from "@/lib/profiles";
+import { notify, errorMessage } from "@/lib/toast";
 
 const GENDER_OPTIONS = [
   { value: "M", label: "Male" },
@@ -97,12 +98,10 @@ function EditProfile() {
         ...data,
         interest_ids: selectedInterestIds,
       });
+      notify.success("Profile updated!");
       router.push("/profile");
     } catch (err: any) {
-      const msg = err.response?.data
-        ? Object.values(err.response.data).flat()[0]
-        : "Failed to save.";
-      setServerError(String(msg));
+      notify.error(errorMessage(err, "Failed to save."));
     } finally {
       setSubmitting(false);
     }

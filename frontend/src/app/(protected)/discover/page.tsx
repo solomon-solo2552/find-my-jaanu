@@ -9,6 +9,7 @@ import { SwipeCard } from "@/components/discover/SwipeCard";
 import { MatchModal } from "@/components/discover/MatchModal";
 import { Profile } from "@/lib/profiles";
 import { matchesApi, Match } from "@/lib/matches";
+import { notify } from "@/lib/toast";
 
 export default function DiscoverPage() {
   return (
@@ -55,6 +56,7 @@ function Discover() {
           const res = await matchesApi.like(current.id);
           if (res.matched && res.match) {
             setMatch(res.match);
+            notify.success(`It's a match with ${res.match.other_profile.display_name}! 🎉`);
           }
         } else {
           await matchesApi.pass(current.id);
@@ -92,14 +94,14 @@ function Discover() {
         </div>
 
         {/* Card stack */}
-        <div className="relative flex-1 min-h-[500px]">
+        <div className="relative flex-1 min-h-[420px] sm:min-h-[500px]">
           <AnimatePresence>
             {profiles.length === 0 ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl shadow">
                 <Heart className="w-12 h-12 text-pink-300 mb-3" />
-                <p className="text-gray-700 font-medium">You&apos;re all caught up!</p>
-                <p className="text-sm text-gray-500 mb-4">
-                  Check back later for new people.
+                <p className="text-gray-900 font-semibold mb-1">You&apos;re all caught up!</p>
+                <p className="text-sm text-gray-500 mb-4 max-w-xs">
+                  No more profiles to show right now. Check back later or refresh.
                 </p>
                 <Button variant="secondary" onClick={loadProfiles}>
                   <RefreshCw className="w-4 h-4 mr-2" />

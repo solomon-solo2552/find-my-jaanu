@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Navbar } from "@/components/layout/Navbar";
@@ -37,6 +38,16 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           <div className="flex-1">{children}</div>
+          <Toaster
+            position="bottom-right"
+            richColors
+            closeButton
+            toastOptions={{
+              style: {
+                fontFamily: "inherit",
+              },
+            }}
+          />
         </AuthProvider>
       </body>
     </html>

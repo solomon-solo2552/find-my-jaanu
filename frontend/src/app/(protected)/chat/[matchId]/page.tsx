@@ -14,6 +14,9 @@ import { matchesApi } from "@/lib/matches";
 import { absoluteMediaUrl } from "@/lib/api";
 import { safetyApi, ReportReason } from "@/lib/safety";
 import { ReportModal } from "@/components/safety/ReportModal";
+import { notify, errorMessage } from "@/lib/toast";
+import { ChatSkeleton } from "@/components/skeletons/ChatSkeletons";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function ChatPage() {
   return (
@@ -95,11 +98,9 @@ function Chat() {
       const newMsg = await chatApi.sendMessage(matchId, content);
       setMessages((prev) => [...prev, newMsg]);
       return true;
-    } catch {
-      setError("Failed to send message.");
+    } catch (err) {
+      notify.error(errorMessage(err, "Failed to send message."));
       return false;
-    } finally {
-      setSending(false);
     }
   };
 
@@ -116,9 +117,13 @@ function Chat() {
   };
 
   const handleReport = async (reason: ReportReason, details: string) => {
-  await safetyApi.report(matchInfo!.other_profile.id, reason, details);
-  // After a report, offer to also block
-  setConfirmBlock(true);
+  try {
+    await safetyApi.report(matchInfo!.other_profile.id, reason, details);
+    notify.success("Report submitted. Thanks for keeping JAANU safe.");
+    setConfirmBlock(true);
+  } catch (err) {
+    notify.error(errorMessage(err, "Failed to submit report."));
+  }
 };
 
 const handleBlock = async () => {
@@ -126,9 +131,10 @@ const handleBlock = async () => {
   setBlocking(true);
   try {
     await safetyApi.block(matchInfo.other_profile.id);
+    notify.success("User Blocked.");
     router.push("/matches");
-  } catch {
-    setError("Failed to block.");
+  } catch (err) {
+    notify.error(errorMessage(err, "Failed to Block."));
     setBlocking(false);
     setConfirmBlock(false);
   }
@@ -136,9 +142,16 @@ const handleBlock = async () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-pink-50">
-        <Loader2 className="w-10 h-10 animate-spin text-pink-600" />
-      </div>
+      <main className="h-[calc(100vh-60px)] sm:h-screen flex flex-col bg-pink-50">
+        <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+          <Skeleton className="w-10 h-10 rounded-full" />
+          <div className="space-y-1">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-16" />
+          </div>
+        </header>
+        <ChatSkeleton />
+      </main>
     );
   }
 

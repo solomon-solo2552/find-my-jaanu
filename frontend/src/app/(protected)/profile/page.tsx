@@ -7,6 +7,7 @@ import { Loader2, MapPin, Edit, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { RequireAuth } from "@/components/providers/RequireAuth";
 import { profilesApi, Profile, photoUrl } from "@/lib/profiles";
+import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
 
 export default function ProfilePage() {
   return (
@@ -29,9 +30,11 @@ function ProfileView() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-pink-600" />
-      </div>
+      <main className="min-h-screen bg-pink-50 py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          <ProfileSkeleton />
+        </div>
+      </main>
     );
   }
 

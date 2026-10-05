@@ -5,14 +5,6 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* Force light mode for the app - remove or customize later if you want dark mode */
 body {
   color: #171717;
   background: #ffffff;
@@ -23,12 +15,16 @@ body {
 input,
 textarea,
 select {
-  color: #111827;          /* gray-900 */
+  color: #111827;
   background-color: #ffffff;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #9ca3af;          /* gray-400 */
+  color: #9ca3af;
 }
 
+/* Buttons with no explicit color inherit body color (dark) */
+button {
+  color: inherit;
+}

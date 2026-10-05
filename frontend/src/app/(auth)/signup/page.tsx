@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { authApi } from "@/lib/auth";
 import { useAuthStore } from "@/store/auth";
+import { notify, errorMessage } from "@/lib/toast";
 
 const signupSchema = z
   .object({
@@ -42,14 +43,13 @@ export default function SignupPage() {
     try {
       const res = await authApi.register(data);
       setAuth(res.user, res.access, res.refresh);
+      notify.success("Welcome to Find My JAANU! 💘")
       router.push("/onboarding");
     } catch (err: any) {
       const msg =
-        err.response?.data?.email?.[0] ||
-        err.response?.data?.password?.[0] ||
-        err.response?.data?.detail ||
-        "Signup failed. Please try again.";
-      setServerError(msg);
+        errorMessage(err, "Signup failed.");
+        notify.error(msg);
+        setServerError(msg);
     }
   };
 

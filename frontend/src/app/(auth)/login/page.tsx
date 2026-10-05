@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { authApi } from "@/lib/auth";
 import { useAuthStore } from "@/store/auth";
+import { notify, errorMessage } from "@/lib/toast"
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -40,11 +41,14 @@ export default function LoginPage() {
       localStorage.setItem("refresh_token", refresh);
       const user = await authApi.me();
       setAuth(user, access, refresh);
+      notify.success("Welcome back! 💘")
       router.push("/");
     } catch (err: any) {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        setServerError(err.response?.data?.detail || "Invalid email or password.");
+        const msg = errorMessage(err, "Invalid email or password.");
+        notify.error(msg);
+        setServerError(msg);
     }
   };
 

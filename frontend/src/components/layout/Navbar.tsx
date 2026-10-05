@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/auth";
 import { matchesApi } from "@/lib/matches";
 import { Button } from "@/components/ui/Button";
+import { Compass } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -64,7 +65,8 @@ export function Navbar() {
                 href="/discover"
                 className="text-sm text-gray-700 hover:text-pink-600 font-medium"
               >
-                Discover
+                <span className="hidden sm:inline">Discover</span>
+                <Compass className="w-5 h-5 sm:hidden" />
               </Link>
               <Link
                 href="/matches"
@@ -82,6 +84,12 @@ export function Navbar() {
                 className="text-sm text-gray-700 hover:text-pink-600 font-medium"
               >
                 Profile
+              </Link>
+              <Link
+                href="/settings/blocked"
+                className="text-sm text-gray-700 hover:text-pink-600 font-medium hidden sm:inline"
+              >
+                Blocked
               </Link>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="w-4 h-4" />
