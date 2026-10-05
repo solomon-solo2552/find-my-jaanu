@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from apps.profiles.models import Profile
 from apps.safety.models import Block
 from .models import Like, Match, Pass
-from .serializers import MatchSerializer
+from .serializers import MatchSerializer, LikeWithProfileSerializer
 
 
 def get_my_profile(user):
@@ -153,3 +153,89 @@ class UnmatchView(APIView):
         match.is_active = False
         match.save(update_fields=["is_active"])
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class WhoLikedMeView(generics.ListAPIView):
+    """GET /api/matches/likes-received/ — people who liked me but I haven't acted on."""
+
+    serializer_class = LikeWithProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        me = get_my_profile(self.request.user)
+        if not me:
+            return Like.objects.none()
+
+        # Likes where I'm the likee (they liked me)
+        incoming = Like.objects.filter(likee=me).select_related("liker", "liker__user")
+
+        # Exclude ones I've already liked back (mutual = match, goes to Matches tab)
+        liked_back_ids = Like.objects.filter(liker=me).values_list("likee_id", flat=True)
+        incoming = incoming.exclude(liker_id__in=liked_back_ids)
+
+        # Exclude ones I've passed on
+        passed_ids = Pass.objects.filter(passer=me).values_list("passed_id", flat=True)
+        incoming = incoming.exclude(liker_id__in=passed_ids)
+
+        # Exclude blocked (both ways)
+        from apps.safety.models import Block
+        blocked_by_me = Block.objects.filter(blocker=me).values_list("blocked_id", flat=True)
+        blocked_me = Block.objects.filter(blocked=me).values_list("blocker_id", flat=True)
+        incoming = incoming.exclude(liker_id__in=blocked_by_me)
+        incoming = incoming.exclude(liker_id__in=blocked_me)
+
+        return incoming.prefetch_related(
+            "liker__photos", "liker__interests__interest"
+        ).order_by("-created_at")
+
+    def get_serializer_context(self):
+        ctx = super().get_serializer_context()
+        ctx["me"] = get_my_profile(self.request.user)
+        return ctx
+
+
+class MyLikesView(generics.ListAPIView):
+    """GET /api/matches/likes-sent/ — people I liked who haven't liked back."""
+
+    serializer_class = LikeWithProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        me = get_my_profile(self.request.user)
+        if not me:
+            return Like.objects.none()
+
+        outgoing = Like.objects.filter(liker=me).select_related("likee", "likee__user")
+
+        # Exclude ones where they've liked me back (mutual = match)
+        liked_me_ids = Like.objects.filter(likee=me).values_list("liker_id", flat=True)
+        outgoing = outgoing.exclude(likee_id__in=liked_me_ids)
+
+        # Exclude blocked
+        from apps.safety.models import Block
+        blocked_by_me = Block.objects.filter(blocker=me).values_list("blocked_id", flat=True)
+        blocked_me = Block.objects.filter(blocked=me).values_list("blocker_id", flat=True)
+        outgoing = outgoing.exclude(likee_id__in=blocked_by_me)
+        outgoing = outgoing.exclude(likee_id__in=blocked_me)
+
+        return outgoing.prefetch_related(
+            "likee__photos", "likee__interests__interest"
+        ).order_by("-created_at")
+
+    def get_serializer_context(self):
+        ctx = super().get_serializer_context()
+        ctx["me"] = get_my_profile(self.request.user)
+        return ctx
+
+
+# class MyPassesView(generics.ListAPIView):
+#     """GET /api/matches/passes/ — people I passed on."""
+
+#     serializer_class = serializers.Serializer  # placeholder — we'll skip in UI
+#     permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         me = get_my_profile(self.request.user)
+#         if not me:
+#             return Pass.objects.none()
+#         return Pass.objects.filter(passer=me).select_related("passed").order_by("-created_at")

@@ -14,9 +14,11 @@ export function Navbar() {
   const router = useRouter();
   const { isAuthenticated, logout } = useAuthStore();
   const [newMatchCount, setNewMatchCount] = useState(0);
+  const [likesCount, setLikesCount] = useState(0);
 
   useEffect(() => {
     if (!isAuthenticated) {
+      setLikesCount(0);
       setNewMatchCount(0);
       return;
     }
@@ -25,10 +27,13 @@ export function Navbar() {
 
     const fetchCount = async () => {
       try {
-        const res = await matchesApi.list();
-        if (!cancelled) {
-          setNewMatchCount(res.results.filter((m) => !m.last_message).length);
-        }
+        const [matchesRes, likesRes] = await Promise.all([
+          matchesApi.list(),
+          matchesApi.likesReceived(),
+        ]);
+        if (!cancelled) return;
+        setNewMatchCount(matchesRes.results.filter((m) => !m.last_message).length);
+        setLikesCount(likesRes.results.length);
       } catch {
         // ignore
       }
@@ -67,6 +72,17 @@ export function Navbar() {
               >
                 <span className="hidden sm:inline">Discover</span>
                 <Compass className="w-5 h-5 sm:hidden" />
+              </Link>
+              <Link
+                href="/likes"
+                className="relative text-sm text-gray-700 hover:text-pink-600 font-medium"
+              >
+                Likes
+                {likesCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    {likesCount > 9 ? "9+" : likesCount}
+                  </span>
+                )}
               </Link>
               <Link
                 href="/matches"
