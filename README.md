@@ -23,6 +23,30 @@ A full-stack social matching platform built with **Next.js**, **Django**, and **
 ## Local Development
 See `backend/README.md` and `frontend/README.md`.
 
+## Testing
+
+### Backend
+\`\`\`bash
+cd backend
+source .venv/bin/activate
+pytest                   # run all test
+pytest --cov=apps        # with coverage
+open htmlcov/index.html  # view coverage report
+\`\`\`
+
+### Frontend
+\`\`\`bash
+cd frontend
+npm test            # run once
+npm run test:watch
+\`\`\`
+
+### Both
+\`\`\`bash
+./run-tests.sh  # Mac/Linux
+run-tests.bat   # Windows
+\`\`\`
+
 ## Progress Log
 - **Day 1:** Project scaffolding — Django + Next.js + PostgreSQL setup, first migration successful. 
 - **Day 2 (✅):** Database schema — all core models implemented, migrations applied, admin configured.
@@ -38,3 +62,4 @@ See `backend/README.md` and `frontend/README.md`.
 - **Day 12 (✅):** Fake user seeding for populated demo — 25 users, photos, matches, chat history.
 - **Day 13 (✅):** Public profile view with photo carousel, relation states, and full actions.
 - **Day 14 (✅):** Likes tab — Likes You / You Liked with quick like-back to instant match.
+- **Day 15 (✅):** Testing — 30+ backend tests (pytest) and frontend smoke tests (vitest). Run with `./run-tests.sh`.
