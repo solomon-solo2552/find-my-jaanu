@@ -5,3 +5,7 @@ __pycache__/
 media/
 staticfiles/
 *.sqlite3
+.pytest_cache/
+htmlcov/
+.coverage
+db.sqlite3

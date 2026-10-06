@@ -39,7 +39,7 @@ class Report(models.Model):
         ordering = ["-created_at"]
         constraints = [
             models.CheckConstraint(
-                check=~models.Q(reporter=models.F("reported")),
+                condition=~models.Q(reporter=models.F("reported")),
                 name="prevent_self_report",
             ),
         ]

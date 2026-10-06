@@ -24,7 +24,7 @@ class Like(models.Model):
         indexes = [models.Index(fields=["liker", "likee"])]
         constraints = [
             models.CheckConstraint(
-                check=~models.Q(liker=models.F("likee")),
+                condition=~models.Q(liker=models.F("likee")),
                 name="prevent_self_like",
             ),
         ]
@@ -93,7 +93,7 @@ class Pass(models.Model):
         indexes = [models.Index(fields=["passer", "passed"])]
         constraints = [
             models.CheckConstraint(
-                check=~models.Q(passer=models.F("passed")),
+                condition=~models.Q(passer=models.F("passed")),
                 name="prevent_self_pass",
             ),
         ]

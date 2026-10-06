@@ -62,17 +62,38 @@ class BlockView(APIView):
 
     @transaction.atomic
     def post(self, request, profile_id):
-        # ... (same as before)
-        pass
+        me = get_my_profile(request.user)
+        if not me:
+            return Response({"detail": "No profile."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            other = Profile.objects.get(id=profile_id)
+        except Profile.DoesNotExist:
+            return Response({"detail": "Profile not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if other.id == me.id:
+            return Response({"detail": "You can't block yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        block, created = Block.objects.get_or_create(blocker=me, blocked=other)
+
+        # Deactivate any existing match between the two
+        Match.objects.filter(
+            Q(profile_a=me, profile_b=other) | Q(profile_a=other, profile_b=me)
+        ).update(is_active=False)
+
+        return Response(
+            BlockSerializer(block, context={"request": request}).data,
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
+        )
 
     def delete(self, request, profile_id):
         me = get_my_profile(request.user)
         if not me:
-            return Response({"detail": "No profile."}, status=400)
+            return Response({"detail": "No profile."}, status=status.HTTP_400_BAD_REQUEST)
 
         deleted, _ = Block.objects.filter(blocker=me, blocked_id=profile_id).delete()
         if not deleted:
-            return Response({"detail": "Not blocked."}, status=404)
+            return Response({"detail": "Not blocked."}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 

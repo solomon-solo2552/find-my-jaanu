@@ -1,30 +1,42 @@
-import { formatDistanceToNowStrict, isToday, isYesterday, format, differenceInDays } from "date-fns";
+import { differenceInDays, differenceInSeconds, format, isYesterday } from "date-fns";
 
+/**
+ * Returns a short relative time string:
+ *   < 60s   → "45s"
+ *   < 60m   → "5m"
+ *   < 24h   → "3h"
+ *   yesterday → "Yesterday"
+ *   this week → "Tue"
+ *   older    → "Sep 15"
+ */
 export function formatRelativeTime(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffDays = differenceInDays(now, date);
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffDays = differenceInDays(now, date);
 
-    if (diffDays === 0) {
-        // Today - show "5m", "3h", etc.
-        return formatDistanceToNowStrict(date, { addSuffix: false })
-        .replace("seconds", "s")
-        .replace("second", "s")
-        .replace("minutes","m")
-        .replace("minute","m")
-        .replace("hours","h")
-        .replace("hour","h")
-        .replace("days","d")
-        .replace("day","d");
+  if (diffDays === 0) {
+    const diffSeconds = differenceInSeconds(now, date);
+
+    if (diffSeconds < 60) {
+      return `${Math.max(1, diffSeconds)}s`;
     }
 
-    if (diffDays === 1 || isYesterday(date)) {
-        return "Yesterday";
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    if (diffMinutes < 60) {
+      return `${diffMinutes}m`;
     }
 
-    if (diffDays < 7) {
-        return format(date, "EEE"); // "Mon", "Tue"
-    }
+    const diffHours = Math.floor(diffMinutes / 60);
+    return `${diffHours}h`;
+  }
 
-    return format(date, "MMM d"); // "Sep 15"
+  if (diffDays === 1 || isYesterday(date)) {
+    return "Yesterday";
+  }
+
+  if (diffDays < 7) {
+    return format(date, "EEE"); // "Mon", "Tue"
+  }
+
+  return format(date, "MMM d"); // "Sep 15"
 }
