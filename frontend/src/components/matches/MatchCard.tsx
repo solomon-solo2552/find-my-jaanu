@@ -20,7 +20,7 @@ export function MatchCard({ match, onUnmatch }: Props) {
   const hasMessages = !!match.last_message;
 
   return (
-    <div className="relative bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100">
+    <div className="relative bg-white rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 border border-gray-100">
       <div
         className="flex items-center gap-4 p-3 cursor-pointer"
         onClick={() => router.push(`/chat/${match.id}`)}

@@ -11,12 +11,13 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* Ensure inputs always have visible text on white backgrounds */
+/* Inputs always have visible text on white backgrounds */
 input,
 textarea,
 select {
   color: #111827;
   background-color: #ffffff;
+  font-size: 16px; /* Prevent iOS zoom */
 }
 
 input::placeholder,
@@ -24,7 +25,42 @@ textarea::placeholder {
   color: #9ca3af;
 }
 
-/* Buttons with no explicit color inherit body color (dark) */
 button {
   color: inherit;
+}
+
+/* Custom scrollbar (Webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(236, 72, 153, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 72, 153, 0.5);
+}
+
+/* Focus rings */
+*:focus-visible {
+  outline: 2px solid #ec4899;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text-size-adjust on mobile */
+html {
+  -webkit-text-size-adjust: 100%;
 }

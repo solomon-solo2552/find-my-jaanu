@@ -14,7 +14,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || loading}
         className={clsx(
-          "inline-flex items-center justify-center font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed",
+          "inline-flex items-center justify-center font-medium rounded-lg transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
           {
             "bg-pink-600 text-white hover:bg-pink-700": variant === "primary",
             "bg-gray-200 text-gray-900 hover:bg-gray-300": variant === "secondary",

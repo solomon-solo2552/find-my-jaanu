@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fce7f3" />
+      <stop offset="100%" style="stop-color:#fbcfe8" />
+    </linearGradient>
+    <linearGradient id="heart" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899" />
+      <stop offset="100%" style="stop-color:#be185d" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <g transform="translate(600, 280)">
+    <path d="M0 100 C0 100 -120 15 -120 -50 C-120 -95 -85 -120 -50 -120 C-25 -120 -5 -105 0 -85 C5 -105 25 -120 50 -120 C85 -120 120 -95 120 -50 C120 15 0 100 0 100 Z" 
+          fill="url(#heart)" transform="scale(1.2)"/>
+  </g>
+  
+  <text x="600" y="460" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" 
+        font-size="72" font-weight="bold" fill="#be185d">
+    Find My JAANU
+  </text>
+  
+  <text x="600" y="520" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" 
+        font-size="28" fill="#6b7280">
+    Meet someone who loves chai, code, and everything in between.
+  </text>
+</svg>

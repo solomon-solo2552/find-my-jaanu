@@ -21,7 +21,7 @@ export function LikeGrid({ likes, onLikeBack, showLikeBack }: Props) {
         return (
           <div
             key={like.id}
-            className="group relative rounded-2xl overflow-hidden bg-gray-100 aspect-[3/4]"
+            className="group relative rounded-2xl overflow-hidden bg-gray-100 aspect-[3/4] hover:shadow-lg hover:-translate-y-0.5 transition-all duration 200"
           >
             {/* Photo (links to profile) */}
             <Link href={`/profile/${p.id}`} className="block w-full h-full">
