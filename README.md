@@ -63,3 +63,4 @@ run-tests.bat   # Windows
 - **Day 13 (✅):** Public profile view with photo carousel, relation states, and full actions.
 - **Day 14 (✅):** Likes tab — Likes You / You Liked with quick like-back to instant match.
 - **Day 15 (✅):** Testing — 30+ backend tests (pytest) and frontend smoke tests (vitest). Run with `./run-tests.sh`.
+- **Day 16 (✅):** Polish — favicon, meta tags, loading states, offline banner, micro-animations.
