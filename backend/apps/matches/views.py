@@ -8,6 +8,8 @@ from apps.profiles.models import Profile
 from apps.safety.models import Block
 from .models import Like, Match, Pass
 from .serializers import MatchSerializer, LikeWithProfileSerializer
+from .daily_picks import get_daily_picks, seconds_until_reset
+from apps.profiles.serializers import ProfileReadSerializer
 
 
 def get_my_profile(user):
@@ -228,14 +230,25 @@ class MyLikesView(generics.ListAPIView):
         return ctx
 
 
-# class MyPassesView(generics.ListAPIView):
-#     """GET /api/matches/passes/ — people I passed on."""
+class DailyPicksView(APIView):
+    """GET /api/matches/daily-picks/ - 5 curated profiles for today."""
 
-#     serializer_class = serializers.Serializer  # placeholder — we'll skip in UI
-#     permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
-#     def get_queryset(self):
-#         me = get_my_profile(self.request.user)
-#         if not me:
-#             return Pass.objects.none()
-#         return Pass.objects.filter(passer=me).select_related("passed").order_by("-created_at")
+    def get(self, request):
+        me = get_my_profile(request.user)
+        if not me:
+            return Response({"detail": "Create a profile first."}, status=400)
+
+        profiles = get_daily_picks(me, count=5)
+
+
+        serializer = ProfileReadSerializer(
+            profiles, many=True, context={"request": request}
+        )
+
+        return Response({
+            "date": str(__import__("datetime").date.today()),
+            "seconds_until_reset": seconds_until_reset(),
+            "results": serializer.data,
+        })

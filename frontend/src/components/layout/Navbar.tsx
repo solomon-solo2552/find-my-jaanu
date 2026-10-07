@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, LogOut, Settings } from "lucide-react";
+import { Heart, LogOut, Settings, Sparkles } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/auth";
 import { matchesApi } from "@/lib/matches";
@@ -66,6 +66,13 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
+              <Link
+                href="/daily"
+                className="relative text-sm text-gray-700 hover:text-yellow-600 font-medium flex items-center gap-1"
+              >
+                <Sparkles className="w-4 h-4 text-yellow-500" />
+                <span className="hidden sm:inline">Daily</span>
+              </Link>
               <Link
                 href="/discover"
                 className="text-sm text-gray-700 hover:text-pink-600 font-medium"

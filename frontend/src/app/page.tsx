@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/Button";
+import { Sparkles } from "lucide-react";
 
 export default function Home() {
   const { isAuthenticated, isLoading } = useAuthStore();
@@ -28,9 +29,19 @@ export default function Home() {
         </p>
 
         {isAuthenticated ? (
-          <Link href="/discover">
-            <Button size="lg">Start Discovering</Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <Link href="/daily">
+              <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Today&apos;s Picks
+              </Button>
+            </Link>
+            <Link href="/discover">
+              <Button size="lg" variant="secondary">
+                Start Discovering
+              </Button>
+            </Link>
+          </div>
         ) : (
           <div className="flex gap-3 justify-center">
             <Link href="/signup">

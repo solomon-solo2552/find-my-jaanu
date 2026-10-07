@@ -29,6 +29,12 @@ export interface LikeEntry {
   other_profile: Profile;
 }
 
+export interface DailyPicksResponse {
+  date: string;
+  seconds_until_reset: number;
+  results: Profile[];
+}
+
 export const matchesApi = {
   discover: async (params?: Record<string, string>): Promise<{ results: Profile[] }> => {
     const res = await api.get("/profiles/discover/", { params });
@@ -64,4 +70,9 @@ export const matchesApi = {
     const res = await api.get("/matches/likes-sent/");
     return res.data;
   },
+
+  dailyPicks: async (): Promise<DailyPicksResponse> => {
+    const res = await api.get("/matches/daily-picks/");
+    return res.data;
+  }
 };

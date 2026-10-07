@@ -8,6 +8,7 @@ urlpatterns = [
     path("matches/", MatchListView.as_view(), name="list"),
     path("matches/likes-received/", WhoLikedMeView.as_view(), name="likes-received"),
     path("matches/likes-sent/", MyLikesView.as_view(), name="likes-sent"),
+    path("matches/daily-picks/", DailyPicksView.as_view(), name="daily-picks"),
     path("matches/<uuid:id>/", MatchDetailView.as_view(), name="detail"),
     path("matches/<uuid:match_id>/unmatch/", UnmatchView.as_view(), name="unmatch"),
     path("matches/like/<uuid:profile_id>/", LikeView.as_view(), name="like"),
