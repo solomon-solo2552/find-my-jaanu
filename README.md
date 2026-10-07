@@ -65,3 +65,4 @@ run-tests.bat   # Windows
 - **Day 15 (✅):** Testing — 30+ backend tests (pytest) and frontend smoke tests (vitest). Run with `./run-tests.sh`.
 - **Day 16 (✅):** Polish — favicon, meta tags, loading states, offline banner, micro-animations.
 - **Day 17 (✅):** Settings hub — email, password, visibility, blocked users, logout everywhere, delete account.
+- **Day 18 (✅):** Daily Picks — deterministic curation algorithm, gold-themed UI, midnight reset timer.
