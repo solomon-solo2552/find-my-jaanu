@@ -27,24 +27,24 @@ class TestChat:
         assert res.data["other_profile"]["display_name"] == self.other.display_name
 
     def test_send_message(self):
-        res = self.client.post(f"/api/chat/{self.match.id}/send/", {
-            "content": "Hello!"
-        }, format="json")
+        res = self.client.post(
+            f"/api/chat/{self.match.id}/send/", {"content": "Hello!"}, format="json"
+        )
 
         assert res.status_code == 201
         assert res.data["content"] == "Hello!"
         assert Message.objects.count() == 1
 
     def test_send_empty_message_fails(self):
-        res = self.client.post(f"/api/chat/{self.match.id}/send/", {
-            "content": "   "
-        }, format="json")
+        res = self.client.post(
+            f"/api/chat/{self.match.id}/send/", {"content": "   "}, format="json"
+        )
         assert res.status_code == 400
 
     def test_send_message_too_long_fails(self):
-        res = self.client.post(f"/api/chat/{self.match.id}/send/", {
-            "content": "a" * 2001
-        }, format="json")
+        res = self.client.post(
+            f"/api/chat/{self.match.id}/send/", {"content": "a" * 2001}, format="json"
+        )
         assert res.status_code == 400
 
     def test_history_returns_messages(self):
@@ -69,8 +69,8 @@ class TestChat:
         self.match.is_active = False
         self.match.save()
 
-        res = self.client.post(f"/api/chat/{self.match.id}/send/", {
-            "content": "Hello?"
-        }, format="json")
+        res = self.client.post(
+            f"/api/chat/{self.match.id}/send/", {"content": "Hello?"}, format="json"
+        )
 
         assert res.status_code == 404

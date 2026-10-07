@@ -18,24 +18,36 @@ class TestSafety:
         self.other = ProfileFactory(user=self.other_user)
 
     def test_report_creates_row(self):
-        res = self.client.post(f"/api/safety/report/{self.other.id}/", {
-            "reason": "harassment",
-            "details": "Sent creepy messages",
-        }, format="json")
+        res = self.client.post(
+            f"/api/safety/report/{self.other.id}/",
+            {
+                "reason": "harassment",
+                "details": "Sent creepy messages",
+            },
+            format="json",
+        )
 
         assert res.status_code == 201
         assert Report.objects.filter(reporter=self.me, reported=self.other).exists()
 
     def test_report_invalid_reason(self):
-        res = self.client.post(f"/api/safety/report/{self.other.id}/", {
-            "reason": "not_a_real_reason",
-        }, format="json")
+        res = self.client.post(
+            f"/api/safety/report/{self.other.id}/",
+            {
+                "reason": "not_a_real_reason",
+            },
+            format="json",
+        )
         assert res.status_code == 400
 
     def test_cannot_report_self(self):
-        res = self.client.post(f"/api/safety/report/{self.me.id}/", {
-            "reason": "spam",
-        }, format="json")
+        res = self.client.post(
+            f"/api/safety/report/{self.me.id}/",
+            {
+                "reason": "spam",
+            },
+            format="json",
+        )
         assert res.status_code == 400
 
     def test_block_creates_block(self):

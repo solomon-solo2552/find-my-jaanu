@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, LogOut } from "lucide-react";
+import { Heart, LogOut, Settings } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/auth";
 import { matchesApi } from "@/lib/matches";
@@ -100,6 +100,13 @@ export function Navbar() {
                 className="text-sm text-gray-700 hover:text-pink-600 font-medium"
               >
                 Profile
+              </Link>
+              <Link
+                href="/settings"
+                className="p-2 rounded-full hover:bg-gray-100 text-gray-600"
+                title="Settings"
+              >
+                <Settings className="w-5 h-5" />
               </Link>
               <Link
                 href="/settings/blocked"

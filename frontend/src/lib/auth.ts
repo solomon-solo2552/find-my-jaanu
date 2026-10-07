@@ -37,4 +37,31 @@ export const authApi = {
       // ignore — token may already be invalid
     }
   },
+
+  // ---------- Settings ----------
+  changeEmail: async (newEmail: string, password: string): Promise<void> => {
+    await api.post("/auth/change-email/", { new_email: newEmail, password });
+  },
+
+  changePassword: async (
+    currentPassword: string,
+    newPassword: string,
+    newPasswordConfirm: string
+  ): Promise<void> => {
+    await api.post("/auth/change-password/", {
+      current_password: currentPassword,
+      new_password: newPassword,
+      new_password_confirm: newPasswordConfirm,
+    });
+  },
+
+  logoutAll: async (): Promise<void> => {
+    await api.post("/auth/logout-all/");
+  },
+
+  deleteAccount: async (password: string, confirmation: string): Promise<void> => {
+    await api.delete("/auth/delete-account/", {
+      data: { password, confirmation },
+    });
+  },
 };

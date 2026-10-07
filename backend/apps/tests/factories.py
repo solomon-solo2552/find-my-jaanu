@@ -25,7 +25,9 @@ class ProfileFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     display_name = factory.Sequence(lambda n: f"Test User {n}")
     bio = "Testing bio"
-    date_of_birth = factory.LazyFunction(lambda: date.today() - timedelta(days=25 * 365))
+    date_of_birth = factory.LazyFunction(
+        lambda: date.today() - timedelta(days=25 * 365)
+    )
     gender = "M"
     interested_in = "F"
     city = "Mumbai"
@@ -74,6 +76,7 @@ class MessageFactory(factory.django.DjangoModelFactory):
     sender = factory.LazyAttribute(lambda o: o.match.profile_a)
     content = "Test message"
     message_type = "text"
+
 
 class PassFactory(factory.django.DjangoModelFactory):
     class Meta:
