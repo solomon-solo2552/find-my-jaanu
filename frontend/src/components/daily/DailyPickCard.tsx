@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, Sparkles } from "lucide-react";
+import { MapPin, Sparkles, Crown } from "lucide-react";
 import { Profile, photoUrl } from "@/lib/profiles";
 
 interface Props {
@@ -37,8 +37,15 @@ export function DailyPickCard({ profile, rank }: Props) {
             </div>
 
             {/* Sparkle icon */}
-            <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow">
-                <Sparkles className="w-4 h-4 text-yellow-600" />
+            <div className="absolute top-3 right-3 flex gap-1">
+                {profile.is_featured && (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 flex items-center justify-center shadow-md border-2 border-white">
+                        <Crown className="w-4 h-4 text-white fill-white" />
+                    </div>
+                )}
+                <div className="w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow">
+                    <Sparkles className="w-4 h-4 text-yellow-600" />
+                </div>
             </div>
 
             {/* Gradient overlay */}

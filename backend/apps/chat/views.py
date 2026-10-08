@@ -80,6 +80,8 @@ class MatchInfoView(APIView):
                 "id": str(other.id),
                 "display_name": other.display_name,
                 "photo": photo_url,
+                "is_featured": other.is_featured,
+                "featured_note": other.featured_note,
             },
         })
 

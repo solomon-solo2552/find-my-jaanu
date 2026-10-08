@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Loader2, MoreVertical } from "lucide-react";
+import { ArrowLeft, Loader2, MoreVertical, Crown } from "lucide-react";
 import { RequireAuth } from "@/components/providers/RequireAuth";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { MessageComposer } from "@/components/chat/MessageComposer";
@@ -117,28 +117,28 @@ function Chat() {
   };
 
   const handleReport = async (reason: ReportReason, details: string) => {
-  try {
-    await safetyApi.report(matchInfo!.other_profile.id, reason, details);
-    notify.success("Report submitted. Thanks for keeping JAANU safe.");
-    setConfirmBlock(true);
-  } catch (err) {
-    notify.error(errorMessage(err, "Failed to submit report."));
-  }
-};
+    try {
+      await safetyApi.report(matchInfo!.other_profile.id, reason, details);
+      notify.success("Report submitted. Thanks for keeping JAANU safe.");
+      setConfirmBlock(true);
+    } catch (err) {
+      notify.error(errorMessage(err, "Failed to submit report."));
+    }
+  };
 
-const handleBlock = async () => {
-  if (!matchInfo) return;
-  setBlocking(true);
-  try {
-    await safetyApi.block(matchInfo.other_profile.id);
-    notify.success("User Blocked.");
-    router.push("/matches");
-  } catch (err) {
-    notify.error(errorMessage(err, "Failed to Block."));
-    setBlocking(false);
-    setConfirmBlock(false);
-  }
-};
+  const handleBlock = async () => {
+    if (!matchInfo) return;
+    setBlocking(true);
+    try {
+      await safetyApi.block(matchInfo.other_profile.id);
+      notify.success("User Blocked.");
+      router.push("/matches");
+    } catch (err) {
+      notify.error(errorMessage(err, "Failed to Block."));
+      setBlocking(false);
+      setConfirmBlock(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -179,27 +179,30 @@ const handleBlock = async () => {
           className="flex items-center gap-3 flex-1 min-w-0 hover:opacity-80 transition"
           title="View profile"
         >
-        {absoluteMediaUrl(matchInfo.other_profile.photo) ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={absoluteMediaUrl(matchInfo.other_profile.photo) as string}
-            alt={matchInfo.other_profile.display_name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
-            {matchInfo.other_profile.display_name[0].toUpperCase()}
+          {absoluteMediaUrl(matchInfo.other_profile.photo) ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={absoluteMediaUrl(matchInfo.other_profile.photo) as string}
+              alt={matchInfo.other_profile.display_name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">
+              {matchInfo.other_profile.display_name[0].toUpperCase()}
+            </div>
+          )}
+          <div className="min-w-0">
+            <h2 className="font-semibold text-gray-900 truncate flex items-center gap-1.5">
+              {matchInfo.other_profile.display_name}
+              {(matchInfo.other_profile as any).is_featured && (
+                <Crown className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+              )}
+            </h2>
+            <p className="text-xs text-gray-500 flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-green-500" />
+              Active
+            </p>
           </div>
-        )}
-        <div className="min-w-0">
-          <h2 className="font-semibold text-gray-900 truncate">
-            {matchInfo.other_profile.display_name}
-          </h2>
-          <p className="text-xs text-gray-500 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-green-500" />
-            Active
-          </p>
-        </div>
         </Link>
 
         <div className="relative">
@@ -217,35 +220,35 @@ const handleBlock = async () => {
                 onClick={() => setMenuOpen(false)}
               />
               <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20 min-w-[180px]">
-  <button
-    onClick={() => {
-      setMenuOpen(false);
-      setReportOpen(true);
-    }}
-    className="px-4 py-2 text-sm text-gray-900 font-medium hover:bg-gray-50 w-full text-left"
-  >
-    🚩 Report
-  </button>
-  <button
-    onClick={() => {
-      setMenuOpen(false);
-      setConfirmBlock(true);
-    }}
-    className="px-4 py-2 text-sm text-gray-900 font-medium hover:bg-gray-50 w-full text-left"
-  >
-    🚫 Block
-  </button>
-  <div className="border-t border-gray-100 my-1" />
-  <button
-    onClick={() => {
-      setMenuOpen(false);
-      setConfirmUnmatch(true);
-    }}
-    className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
-  >
-    Unmatch
-  </button>
-</div>
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setReportOpen(true);
+                  }}
+                  className="px-4 py-2 text-sm text-gray-900 font-medium hover:bg-gray-50 w-full text-left"
+                >
+                  🚩 Report
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setConfirmBlock(true);
+                  }}
+                  className="px-4 py-2 text-sm text-gray-900 font-medium hover:bg-gray-50 w-full text-left"
+                >
+                  🚫 Block
+                </button>
+                <div className="border-t border-gray-100 my-1" />
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setConfirmUnmatch(true);
+                  }}
+                  className="px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
+                >
+                  Unmatch
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -292,22 +295,22 @@ const handleBlock = async () => {
       />
 
       <ReportModal
-  open={reportOpen}
-  displayName={matchInfo.other_profile.display_name}
-  onClose={() => setReportOpen(false)}
-  onSubmit={handleReport}
-/>
+        open={reportOpen}
+        displayName={matchInfo.other_profile.display_name}
+        onClose={() => setReportOpen(false)}
+        onSubmit={handleReport}
+      />
 
-<ConfirmDialog
-  open={confirmBlock}
-  title="Block this user?"
-  description={`${matchInfo.other_profile.display_name} won't be able to see you or message you. This will also end your match.`}
-  confirmLabel="Block"
-  destructive
-  loading={blocking}
-  onConfirm={handleBlock}
-  onCancel={() => setConfirmBlock(false)}
-/>
+      <ConfirmDialog
+        open={confirmBlock}
+        title="Block this user?"
+        description={`${matchInfo.other_profile.display_name} won't be able to see you or message you. This will also end your match.`}
+        confirmLabel="Block"
+        destructive
+        loading={blocking}
+        onConfirm={handleBlock}
+        onCancel={() => setConfirmBlock(false)}
+      />
     </main>
   );
 }

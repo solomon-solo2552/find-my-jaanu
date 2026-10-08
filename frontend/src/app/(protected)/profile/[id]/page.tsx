@@ -25,6 +25,8 @@ import { profilesApi, Profile, photoUrl } from "@/lib/profiles";
 import { matchesApi } from "@/lib/matches";
 import { safetyApi, ReportReason } from "@/lib/safety";
 import { notify, errorMessage } from "@/lib/toast";
+import { FeaturedBadge } from "@/components/ui/FeaturedBadge";
+import clsx from "clsx";
 
 export default function PublicProfilePage() {
   return (
@@ -155,7 +157,7 @@ function PublicProfile() {
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Photo carousel */}
-          <div className="relative aspect-[4/5] bg-gray-100">
+          <div className={clsx("relative aspect-[4/5] bg-gray-100", profile.is_featured && "ring-4 ring-yellow-400 ring-inset")}>
             {primary ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -191,11 +193,10 @@ function PublicProfile() {
                   {profile.photos.map((_, i) => (
                     <span
                       key={i}
-                      className={`h-1.5 rounded-full transition-all ${
-                        i === photoIndex
-                          ? "w-6 bg-white"
-                          : "w-1.5 bg-white/60"
-                      }`}
+                      className={`h-1.5 rounded-full transition-all ${i === photoIndex
+                        ? "w-6 bg-white"
+                        : "w-1.5 bg-white/60"
+                        }`}
                     />
                   ))}
                 </div>
@@ -206,7 +207,10 @@ function PublicProfile() {
           {/* Info */}
           <div className="p-6">
             <div className="mb-3">
-              <h1 className="text-2xl font-bold text-gray-900">
+              {profile.is_featured && (
+                <FeaturedBadge note={profile.featured_note || "Featured"} size="md" />
+              )}
+              <h1 className="text-2xl font-bold text-gray-900 mt-2 flex items-center gap-2">
                 {profile.display_name}, {profile.age}
               </h1>
               {(profile.city || profile.country) && (

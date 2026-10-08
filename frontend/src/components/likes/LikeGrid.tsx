@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart } from "lucide-react";
+import { Heart, Crown } from "lucide-react";
 import { LikeEntry } from "@/lib/matches";
 import { photoUrl } from "@/lib/profiles";
 
@@ -41,8 +41,11 @@ export function LikeGrid({ likes, onLikeBack, showLikeBack }: Props) {
               {/* Gradient + name */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
               <div className="absolute bottom-0 left-0 right-0 p-3 text-white pointer-events-none">
-                <p className="font-semibold truncate">
+                <p className="font-semibold truncate flex items-center gap-1">
                   {p.display_name}, {p.age}
+                  {p.is_featured && (
+                    <Crown className="w-3 h-3 text-yellow-400 fill-yellow-400 flex-shrink-0" />
+                  )}
                 </p>
                 {p.city && (
                   <p className="text-xs text-white/80 truncate">{p.city}</p>

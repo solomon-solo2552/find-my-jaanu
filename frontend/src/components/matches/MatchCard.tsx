@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MessageCircle, MoreVertical } from "lucide-react";
+import { MessageCircle, MoreVertical, Crown } from "lucide-react";
 import { useState } from "react";
 import { Match } from "@/lib/matches";
 import { formatRelativeTime } from "@/lib/time";
+import { FeaturedBadge } from "@/components/ui/FeaturedBadge";
 
 interface Props {
   match: Match;
@@ -26,7 +27,7 @@ export function MatchCard({ match, onUnmatch }: Props) {
         onClick={() => router.push(`/chat/${match.id}`)}
       >
         {/* Avatar - clicking goes to profile */}
-        <div 
+        <div
           className="relative flex-shrink-0"
           onClick={(e) => {
             e.stopPropagation();
@@ -53,8 +54,11 @@ export function MatchCard({ match, onUnmatch }: Props) {
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="font-semibold text-gray-900 truncate">
+            <h3 className="font-semibold text-gray-900 truncate flex items-center gap-1.5">
               {other.display_name}
+              {other.is_featured && (
+                <Crown className="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+              )}
             </h3>
             <span className="text-xs text-gray-500 flex-shrink-0">
               {formatRelativeTime(match.last_message?.created_at || match.matched_at)}

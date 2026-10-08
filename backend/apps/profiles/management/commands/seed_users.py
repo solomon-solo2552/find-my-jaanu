@@ -2,14 +2,14 @@
 Seed the database with fake users, profiles, photos, interests, matches, and messages.
 
 Usage:
-    python manage.py seed_users              # default: 25 users, 5 matches
-    python manage.py seed_users --count 50   # 50 users
-    python manage.py seed_users --reset      # wipe existing seeded data first
+    python manage.py seed_users                    # default: 25 users, 4 featured, 5 matches
+    python manage.py seed_users --count 50         # 50 users
+    python manage.py seed_users --featured 6       # 6 featured profiles
+    python manage.py seed_users --reset            # wipe existing seeded data first
 """
 import random
 import urllib.request
 from datetime import date, timedelta
-from io import BytesIO
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
@@ -87,6 +87,13 @@ CHAT_LINES_B = [
     "Just rewatched Interstellar. Still hits different.",
 ]
 
+FEATURED_NOTES = [
+    "Editor's Pick",
+    "Verified Account",
+    "Staff Pick",
+    "Top Profile",
+]
+
 
 def download_image(url: str) -> ContentFile:
     """Fetch an image from a URL and return as a Django ContentFile."""
@@ -99,23 +106,38 @@ class Command(BaseCommand):
     help = "Seed the database with fake users, profiles, matches, and messages."
 
     def add_arguments(self, parser):
-        parser.add_argument("--count", type=int, default=25, help="Number of users to create")
-        parser.add_argument("--reset", action="store_true", help="Delete existing seeded data first")
+        parser.add_argument(
+            "--count", type=int, default=25,
+            help="Number of users to create (default: 25)"
+        )
+        parser.add_argument(
+            "--featured", type=int, default=4,
+            help="Number of profiles to mark as featured (default: 4)"
+        )
+        parser.add_argument(
+            "--reset", action="store_true",
+            help="Delete existing seeded data first"
+        )
 
     @transaction.atomic
     def handle(self, *args, **options):
         count = options["count"]
+        featured_count = options["featured"]
         reset = options["reset"]
 
+        # ---------- 0. Optional reset ----------
         if reset:
             self.stdout.write("🧹 Deleting existing seeded data...")
-            # Delete seeded users by email pattern
             User.objects.filter(email__endswith="@seed.jaanu.dev").delete()
             self.stdout.write("   Done.")
 
         # Ensure interests exist
         if not Interest.objects.exists():
-            self.stdout.write("⚠️  No interests found. Run `python manage.py seed_interests` first.")
+            self.stdout.write(
+                self.style.WARNING(
+                    "⚠️  No interests found. Run `python manage.py seed_interests` first."
+                )
+            )
             return
 
         interests_all = list(Interest.objects.all())
@@ -140,7 +162,7 @@ class Command(BaseCommand):
                 email=email,
                 password="SeedUser123!",
                 is_active=True,
-                is_verified=random.choice([True, True, False]),  # mostly verified
+                is_verified=random.choice([True, True, False]),
             )
 
             # Profile
@@ -178,17 +200,28 @@ class Command(BaseCommand):
                         save=True,
                     )
                 except Exception as e:
-                    self.stdout.write(self.style.WARNING(f"   ⚠️  Failed to fetch photo: {e}"))
+                    self.stdout.write(
+                        self.style.WARNING(f"   ⚠️  Failed to fetch photo: {e}")
+                    )
 
             profiles_created.append(profile)
 
         self.stdout.write(f"   ✅ Created {len(profiles_created)} profiles")
 
-        # ---------- 2. Create matches + messages ----------
+        # ---------- 2. Mark some profiles as featured ----------
+        if profiles_created and featured_count > 0:
+            n = min(featured_count, len(profiles_created))
+            featured = profiles_created[:n]
+            for p in featured:
+                p.is_featured = True
+                p.featured_note = random.choice(FEATURED_NOTES)
+            Profile.objects.bulk_update(featured, ["is_featured", "featured_note"])
+            self.stdout.write(f"   ⭐ Marked {len(featured)} profiles as featured")
+
+        # ---------- 3. Create matches + messages ----------
         self.stdout.write("💘 Creating matches and chat history...")
         matches_created = 0
 
-        # Build the male/female pools
         males = [p for p in profiles_created if p.gender == "M"]
         females = [p for p in profiles_created if p.gender == "F"]
 
@@ -203,16 +236,13 @@ class Command(BaseCommand):
                 continue
             used_pairs.add(key)
 
-            # Create reciprocal likes
             Like.objects.get_or_create(liker=m, likee=f)
             Like.objects.get_or_create(liker=f, likee=m)
 
-            # Canonical match ordering
             a, b = sorted([m, f], key=lambda p: str(p.id))
             match, _ = Match.objects.get_or_create(profile_a=a, profile_b=b)
             matches_created += 1
 
-            # Messages (3–8 lines, alternating)
             n_msgs = random.randint(3, 8)
             interests = list(m.interests.values_list("interest__name", flat=True)) or ["travel"]
             for j in range(n_msgs):
@@ -228,7 +258,6 @@ class Command(BaseCommand):
                     message_type="text",
                     is_read=True,
                 )
-                # Backdate timestamps
                 offset = timedelta(minutes=(n_msgs - j) * 30)
                 Message.objects.filter(pk=msg.pk).update(
                     created_at=msg.created_at - offset
@@ -236,15 +265,19 @@ class Command(BaseCommand):
 
         self.stdout.write(f"   ✅ Created {matches_created} matches")
 
-        # ---------- 3. Summary ----------
-        self.stdout.write(self.style.SUCCESS(
-            f"\n✨ Done! Seeded users: {User.objects.filter(email__endswith='@seed.jaanu.dev').count()}, "
-            f"profiles: {Profile.objects.count()}, matches: {Match.objects.count()}, "
-            f"messages: {Message.objects.count()}"
-        ))
+        # ---------- 4. Summary ----------
+        featured_total = Profile.objects.filter(is_featured=True).count()
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"\n✨ Done! Seeded users: "
+                f"{User.objects.filter(email__endswith='@seed.jaanu.dev').count()}, "
+                f"profiles: {Profile.objects.count()}, "
+                f"featured: {featured_total}, "
+                f"matches: {Match.objects.count()}, "
+                f"messages: {Message.objects.count()}"
+            )
+        )
         self.stdout.write(
             "\n🔑 All seeded users have password: SeedUser123!"
             "\n   Emails look like: user1@seed.jaanu.dev, user2@seed.jaanu.dev, ..."
         )
-
-        

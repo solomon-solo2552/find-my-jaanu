@@ -247,7 +247,7 @@ class DiscoverView(generics.ListAPIView):
             .exclude(id__in=excluded_ids)
             .select_related("user")
             .prefetch_related("interests__interest", "photos")
-            .order_by("-last_active")
+            .order_by("-is_featured", "-last_active")
         )
 
         # Optional filters (still useful even in discover)

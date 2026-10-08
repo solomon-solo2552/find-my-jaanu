@@ -46,6 +46,8 @@ class ProfileReadSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "is_visible",
+            "is_featured",
+            "featured_note",
             "last_active",
             "created_at",
             "updated_at",

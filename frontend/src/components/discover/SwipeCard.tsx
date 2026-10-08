@@ -1,9 +1,10 @@
 "use client";
 
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
-import { MapPin, Star } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Profile, photoUrl } from "@/lib/profiles";
 import Link from "next/link";
+import { FeaturedBadge } from "@/components/ui/FeaturedBadge";
 
 interface Props {
   profile: Profile;
@@ -51,6 +52,13 @@ export function SwipeCard({ profile, onSwipe, isTop }: Props) {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
+        {/* Featured crown — top-right corner (only when top card) */}
+        {isTop && profile.is_featured && (
+          <div className="absolute top-4 right-4 z-10">
+            <FeaturedBadge variant="icon" size="lg" />
+          </div>
+        )}
+
         {/* LIKE stamp */}
         {isTop && (
           <motion.div
@@ -73,18 +81,29 @@ export function SwipeCard({ profile, onSwipe, isTop }: Props) {
 
         {/* Info */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white pointer-events-none">
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            {profile.display_name}, {profile.age}
+          <h2 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
+            <span>
+              {profile.display_name}, {profile.age}
+            </span>
+            {profile.is_featured && (
+              <FeaturedBadge
+                note={profile.featured_note || "Featured"}
+                size="sm"
+              />
+            )}
           </h2>
+
           {(profile.city || profile.country) && (
             <p className="text-sm text-white/80 flex items-center gap-1 mt-1">
               <MapPin className="w-4 h-4" />
               {[profile.city, profile.country].filter(Boolean).join(", ")}
             </p>
           )}
+
           {profile.bio && (
             <p className="text-sm text-white/90 mt-3 line-clamp-2">{profile.bio}</p>
           )}
+
           {profile.interests.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-3">
               {profile.interests.slice(0, 4).map((i) => (

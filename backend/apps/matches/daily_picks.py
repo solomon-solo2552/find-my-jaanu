@@ -72,6 +72,10 @@ def score_profile(me: Profile, other: Profile, my_interest_ids: set) -> float:
     if other.last_active and other.last_active.date() >= week_ago:
         score += 1.0
 
+    # Featured boost
+    if other.is_featured:
+        score += 5.0          # strong boost, but still beatable by high interest match
+
     return score
 
 

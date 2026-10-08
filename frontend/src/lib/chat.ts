@@ -17,6 +17,8 @@ export interface MatchInfo {
         id: string;
         display_name: string;
         photo: string | null;
+        is_featured: boolean;
+        featured_note: string;
     };
 }
 

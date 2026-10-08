@@ -57,6 +57,8 @@ export interface Profile {
   interests: Interest[];
   photos: Photo[];
   relation?: ProfileRelation;
+  is_featured: boolean;
+  featured_note: string;
 }
 
 export interface ProfileWritePayload {

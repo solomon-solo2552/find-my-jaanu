@@ -32,6 +32,17 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Featured profiles appear first in Discover and Daily Picks.",
+    )
+
+    featured_note = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Optional tagline shown on featured profiles (e.g., 'Editors's Pick').",
+    )
+
     class Meta:
         db_table = "profiles"
         ordering = ["-last_active"]
