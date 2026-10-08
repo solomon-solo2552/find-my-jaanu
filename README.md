@@ -66,3 +66,4 @@ run-tests.bat   # Windows
 - **Day 16 (✅):** Polish — favicon, meta tags, loading states, offline banner, micro-animations.
 - **Day 17 (✅):** Settings hub — email, password, visibility, blocked users, logout everywhere, delete account.
 - **Day 18 (✅):** Daily Picks — deterministic curation algorithm, gold-themed UI, midnight reset timer.
+- **Day 18.5 (✅):** Featured Accounts — admin-controlled `is_featured` flag, gold badges across the UI, boosted Discover and Daily Picks ranking.
