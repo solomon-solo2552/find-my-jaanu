@@ -27,6 +27,7 @@ import { safetyApi, ReportReason } from "@/lib/safety";
 import { notify, errorMessage } from "@/lib/toast";
 import { FeaturedBadge } from "@/components/ui/FeaturedBadge";
 import clsx from "clsx";
+import { fireConfetti } from "@/lib/confetti";
 
 export default function PublicProfilePage() {
   return (
@@ -70,6 +71,7 @@ function PublicProfile() {
     try {
       const res = await matchesApi.like(profile.id);
       if (res.matched) {
+        fireConfetti();
         notify.success(`It's a match with ${profile.display_name}! 🎉`);
         router.push("/matches");
       } else {
@@ -288,7 +290,7 @@ function PublicProfile() {
                 <button
                   onClick={handleLike}
                   disabled={actionLoading}
-                  className="flex-1 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] transition disabled:opacity-50"
+                  className="flex-1 h-14 rounded-full bg-gradient-to-br from-pink-500 via-pink-600 to-pink-700 text-white font-semibold flex items-center justify-center gap-2 shadow-lg shadow-pink-200 hover:scale-[1.02] hover:shadow-xl hover:shadow-pink-300 transition disabled:opacity-50"
                 >
                   <Heart className="w-5 h-5 fill-white" />
                   Like

@@ -11,6 +11,7 @@ import { LikeGrid } from "@/components/likes/LikeGrid";
 import { matchesApi, LikeEntry } from "@/lib/matches";
 import { notify, errorMessage } from "@/lib/toast";
 import clsx from "clsx";
+import { fireConfetti } from "@/lib/confetti";
 
 type Tab = "received" | "sent";
 
@@ -56,6 +57,7 @@ function Likes() {
     try {
       const res = await matchesApi.like(like.other_profile.id);
       if (res.matched) {
+        fireConfetti();
         notify.success(`It's a match with ${like.other_profile.display_name}! 🎉`);
         router.push(`/chat/${res.match?.id}`);
       } else {

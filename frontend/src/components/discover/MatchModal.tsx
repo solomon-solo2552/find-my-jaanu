@@ -6,6 +6,8 @@ import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Match } from "@/lib/matches";
 import { photoUrl } from "@/lib/profiles";
+import { useEffect } from "react";
+import { fireConfetti } from "@/lib/confetti";
 
 interface Props {
   match: Match | null;
@@ -13,6 +15,12 @@ interface Props {
 }
 
 export function MatchModal({ match, onClose }: Props) {
+  useEffect(() => {
+    if (match) {
+      fireConfetti();
+    }
+  }, [match]);
+
   return (
     <AnimatePresence>
       {match && (

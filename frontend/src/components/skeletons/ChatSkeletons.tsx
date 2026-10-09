@@ -8,14 +8,34 @@ export function ChatSkeleton() {
         <Skeleton className="h-10 w-48 rounded-2xl" />
         <Skeleton className="h-2 w-12" />
       </div>
+
       {/* Outgoing message */}
       <div className="flex flex-col items-end self-end gap-1 max-w-[70%]">
         <Skeleton className="h-10 w-40 rounded-2xl" />
         <Skeleton className="h-2 w-12" />
       </div>
+
       {/* Incoming long message */}
       <div className="flex flex-col items-start gap-1 max-w-[70%]">
         <Skeleton className="h-16 w-64 rounded-2xl" />
+        <Skeleton className="h-2 w-12" />
+      </div>
+
+      {/* Outgoing message */}
+      <div className="flex flex-col items-end self-end gap-1 max-w-[70%]">
+        <Skeleton className="h-10 w-52 rounded-2xl" />
+        <Skeleton className="h-2 w-12" />
+      </div>
+
+      {/* Incoming message */}
+      <div className="flex flex-col items-start gap-1 max-w-[70%]">
+        <Skeleton className="h-12 w-56 rounded-2xl" />
+        <Skeleton className="h-2 w-12" />
+      </div>
+
+      {/* Outgoing message */}
+      <div className="flex flex-col items-end self-end gap-1 max-w-[70%]">
+        <Skeleton className="h-10 w-36 rounded-2xl" />
         <Skeleton className="h-2 w-12" />
       </div>
     </div>

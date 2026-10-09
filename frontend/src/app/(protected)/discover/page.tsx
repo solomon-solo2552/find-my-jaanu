@@ -156,13 +156,13 @@ function Discover() {
           <div className="flex items-center justify-center gap-6 mt-6">
             <button
               onClick={() => handleSwipe("left")}
-              className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center hover:scale-110 transition"
+              className="w-16 h-16 rounded-full bg-white shadow-lg shadow-gray-200 hover:shadow-xl hover:shadow-red-100 flex items-center justify-center hover:scale-110 transition"
             >
               <X className="w-8 h-8 text-red-500" />
             </button>
             <button
               onClick={() => handleSwipe("right")}
-              className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 shadow-xl flex items-center justify-center hover:scale-110 transition"
+              className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-pink-700 shadow-xl shadow-pink-200 hover:shadow-2xl hover:shadow-pink-300 flex items-center justify-center hover:scale-110 transition"
             >
               <Heart className="w-10 h-10 text-white fill-white" />
             </button>

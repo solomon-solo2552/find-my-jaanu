@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/Skeleton";
-import { ChatSkeleton } from "@/components/skeletons/ChatSkeleton";
+import { ChatSkeleton } from "@/components/skeletons/ChatSkeletons";
 
 export default function Loading() {
   return (

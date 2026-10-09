@@ -58,9 +58,13 @@ export function Navbar() {
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-pink-600 font-bold text-xl">
-          <Heart className="w-6 h-6 fill-pink-600" />
-          <span className="hidden sm:inline">Find My JAANU</span>
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-sm">
+            <Heart className="w-4 h-4 text-white fill-white" />
+          </div>
+          <span className="bg-gradient-to-r from-pink-600 to-pink-500 bg-clip-text text-transparent hidden sm:inline">
+            Find My JAANU
+          </span>
         </Link>
 
         <div className="flex items-center gap-4">
@@ -97,7 +101,7 @@ export function Navbar() {
               >
                 Matches
                 {newMatchCount > 0 && (
-                  <span className="absolute -top-2 -right-3 bg-pink-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                  <span className="absolute -top-2 -right-3 bg-gradient-to-br from-pink-500 to-pink-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-sm">
                     {newMatchCount > 9 ? "9+" : newMatchCount}
                   </span>
                 )}
