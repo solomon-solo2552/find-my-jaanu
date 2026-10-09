@@ -6,16 +6,17 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { OfflineBanner } from "@/components/layout/OfflineBanner";
 import { PageTransition } from "@/components/layout/PageTransition";
+import { Poppins, Inter } from "next/font/google";
 
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
 });
 
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -30,39 +31,39 @@ export const metadata: Metadata = {
   },
   description:
     "Meet someone who loves chai, code, and evrything in between. A modern social matching platform.",
-    keywords: ["dating", "match", "jaanu", "social", "india"],
-    authors: [{ name: "Find My JAANU" }],
-    icons: {
-      icon: "/favicon.svg",
-    },
-    openGraph: {
-      title: "Find My JAANU 💘",
-      description:
-        "Meet someone who loves chai, code, and everything in between.",
-      url: "https://findmyjaanu.com",
-      siteName: "Find My JAANU",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: "Find My JAANU",
-        },
-      ],
-      locale: "en_IN",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Find My JAANU 💘",
-      description:
-        "Meet someone who loves chai, code, and everything in between.",
-      images: ["/og-image.png"],
-    },
-    robots: {
-      index: true,
-      follow: true,
-    },
+  keywords: ["dating", "match", "jaanu", "social", "india"],
+  authors: [{ name: "Find My JAANU" }],
+  icons: {
+    icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Find My JAANU 💘",
+    description:
+      "Meet someone who loves chai, code, and everything in between.",
+    url: "https://findmyjaanu.com",
+    siteName: "Find My JAANU",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Find My JAANU",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Find My JAANU 💘",
+    description:
+      "Meet someone who loves chai, code, and everything in between.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 
@@ -74,7 +75,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${poppins.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>

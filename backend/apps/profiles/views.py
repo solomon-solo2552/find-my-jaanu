@@ -256,3 +256,27 @@ class DiscoverView(generics.ListAPIView):
             qs = qs.filter(city__icontains=city)
 
         return qs
+
+class PublicStatsView(APIView):
+    """GET /api/profiles/public-preview/ - public avatars for landing page."""
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        profiles = Profile.objects.filter(is_visible=True).exclude(
+            photos__isnull=True
+        ).prefetch_related("photos").distinct()[:12]
+
+        data = [
+            {
+                "id": str(p.id),
+                "display_name": p.diplay_name,
+                "is_featured": p.is_featured,
+                "photo": (
+                    (p.photos.filter(is_primary=True).first() or p.photos.first()).image.url
+                    if p.photos.exists() else None
+                ),
+            }
+            for p in profiles
+        ]
+        return Response({"results": data})
