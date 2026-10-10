@@ -10,6 +10,7 @@ export interface User {
 
 interface AuthState {
   user: User | null;
+  profileId: string | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
@@ -18,10 +19,12 @@ interface AuthState {
   setUser: (user: User | null) => void;
   logout: () => void;
   hydrateFromStorage: () => void;
+  setProfileId: (id: string | null) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
+  profileId: null,
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
@@ -42,6 +45,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   setUser: (user) => set({ user, isAuthenticated: !!user, isLoading: false }),
+  setProfileId: (id) => set({ profileId: id }),
 
   logout: () => {
     if (typeof window !== "undefined") {
@@ -50,6 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
     set({
       user: null,
+      profileId: null,
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,

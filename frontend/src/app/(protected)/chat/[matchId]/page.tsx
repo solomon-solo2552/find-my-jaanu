@@ -31,7 +31,7 @@ function Chat() {
   const router = useRouter();
   const matchId = params.matchId as string;
 
-  const profileId = useAuthStore((s) => s.user?.id);
+  const profileId = useAuthStore((s) => s.profileId);
   const [matchInfo, setMatchInfo] = useState<MatchInfo | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
@@ -142,8 +142,8 @@ function Chat() {
 
   if (loading) {
     return (
-      <main className="h-[calc(100vh-60px)] sm:h-screen flex flex-col bg-pink-50">
-        <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+      <main className="flex flex-col bg-gray-50" style={{ height: "calc(100dvh - 64px)" }}>
+        <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm relative z-10">
           <Skeleton className="w-10 h-10 rounded-full" />
           <div className="space-y-1">
             <Skeleton className="h-4 w-32" />
@@ -169,7 +169,7 @@ function Chat() {
   return (
     <main className="h-screen flex flex-col bg-pink-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
         <Link href="/matches" className="p-1 -ml-1 hover:bg-gray-100 rounded-full">
           <ArrowLeft className="w-5 h-5 text-gray-700" />
         </Link>
@@ -255,7 +255,7 @@ function Chat() {
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 flex flex-col gap-2">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 text-sm my-10">
             <p className="font-medium mb-1">You matched! 🎉</p>

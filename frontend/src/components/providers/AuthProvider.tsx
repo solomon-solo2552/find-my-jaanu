@@ -21,7 +21,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     authApi
       .me()
-      .then((user) => setUser(user))
+      .then(async (user) => {
+        setUser(user);
+        try {
+          const { profilesApi } = await import("@/lib/profiles");
+          const profile = await profilesApi.getMyProfile();
+          if (profile) {
+            useAuthStore.getState().setProfileId(profile.id);
+          }
+        } catch {
+
+        }
+      })
       .catch(() => {
         logout();
       });
