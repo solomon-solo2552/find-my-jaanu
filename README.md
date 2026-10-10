@@ -69,3 +69,4 @@ run-tests.bat   # Windows
 - **Day 18.5 (✅):** Featured Accounts — admin-controlled `is_featured` flag, gold badges across the UI, boosted Discover and Daily Picks ranking.
 - **Day 18.6 (✅):** Landing page — hero, social proof, features, how-it-works, CTA banner, footer.
 - **Day 18.7 (✅):** Polish — confetti on match, subtle sounds, gradient accents, warmer copy.
+- **Day 18.8 (✅):** Chat bubbles now correctly color and align by sender (pink right / white left).
