@@ -162,6 +162,26 @@ function Chat() {
     }
   };
 
+  const handleDeleteForMe = async (msg: Message) => {
+    try {
+      await chatApi.deleteForMe(msg.id);
+      setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+      notify.success("Message deleted for you.");
+    } catch {
+      notify.error("Failed to delete.");
+    }
+  };
+
+  const handleDeleteForEveryone = async (msg: Message) => {
+    try {
+      const updated = await chatApi.deleteForEveryone(msg.id);
+      setMessages((prev) => prev.map((m) => (m.id === msg.id ? updated : m)));
+      notify.success("Message deleted for everyone.");
+    } catch (err: any) {
+      notify.error(err?.response?.data?.detail || "Failed to delete.");
+    }
+  };
+
   if (loading) {
     return (
       <main className="flex flex-col bg-gray-50" style={{ height: "calc(100dvh - 64px)" }}>
@@ -295,6 +315,8 @@ function Chat() {
                 message={msg}
                 isMine={isMine}
                 showSenderName={showSenderName}
+                onDeleteForMe={handleDeleteForMe}
+                onDeleteForEveryone={handleDeleteForEveryone}
               />
             );
           })

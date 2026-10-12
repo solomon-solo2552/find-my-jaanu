@@ -7,10 +7,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.utils import timezone
+from datetime import timedelta
 
 from apps.matches.models import Match
 from apps.profiles.models import Profile
-from .models import Message
+from .models import Message, MessageHidden
 from .serializers import MessageSerializer
 
 
@@ -44,7 +45,15 @@ class MessageHistoryView(generics.ListAPIView):
             is_read=True, read_at=timezone.now()
         )
 
-        return Message.objects.filter(match=match).select_related("sender").order_by("created_at")
+        # Exclude messages hidden for me
+        hidden_ids = MessageHidden.objects.filter(profile=me).values_list("message_id", flat=True)
+
+        return (
+            Message.objects.filter(match=match)
+            .exclude(id__in=hidden_ids)
+            .select_related("sender")
+            .order_by("created_at")
+            )
 
 class MatchInfoView(APIView):
     """GET /api/chat/<match_id>/info/ — get the other profile for chat header."""
@@ -214,3 +223,70 @@ class GifSearchView(APIView):
             for g in data
         ]
         return Response({"results": results})
+
+class DeleteMessageForMeView(APIView):
+    """DELETE /api/chat/messages/<message_id>/for-me/ - hide message for me only."""
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, message_id):
+        me = get_my_profile(request.user)
+        if not me:
+            return Response({"detail": "No profile."}, status=400)
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except Message.DoesNotExist:
+            return Response({"detail": "Message not found."}, status=404)
+
+        # Must be part of the match
+        if me.id not in (message.match.profile_a_id, message.match.profile_b_id):
+            return Response({"detail": "Not allowed."}, status=403)
+
+        MessageHidden.objects.get_or_create(message=message, profile=me)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class DeleteMessageForEveryoneView(APIView):
+    """DELETE /api/chat/messages/<message_id>/for-everyone/ - sender-only, 15-min window."""
+
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, message_id):
+        me = get_my_profile(request.user)
+        if not me:
+            return Response({"detail": "No profile."}, status=400)
+
+        try:
+            message = Message.objects.get(id=message_id)
+        except Message.DoesNotExist:
+            return Response({"detail": "Message not found."}, status=404)
+
+        if message.sender_id != me.id:
+            return Response(
+                {"detail": "You can only delete your own messages."},
+                status=403,
+            )
+
+        if message.is_deleted:
+            return Response({"detail": "Already deleted."}, status=400)
+
+        cutoff = timezone.now() - timedelta(minutes=15)
+        if message.created_at < cutoff:
+            return Response(
+                {"detail": "Messages can only be deleted for everyone within 15 minutes."},
+                status=403,
+            )
+
+        message.is_deleted = True
+        message.deleted_at = timezone.now()
+        message.content = ""
+        message.image = None
+        message.image_url = None
+        message.save(update_fields=[
+            "is_deleted", "deleted_at", "content", "image", "image_url"
+        ])
+
+        return Response(
+            MessageSerializer(message, context={"request": request}).data,
+            status=status.HTTP_200_OK,
+        )
