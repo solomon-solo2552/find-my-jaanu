@@ -104,6 +104,28 @@ function Chat() {
     }
   };
 
+  const handleSendImage = async (file: File): Promise<boolean> => {
+    try {
+      const newMsg = await chatApi.sendImage(matchId, file);
+      setMessages((prev) => [...prev, newMsg]);
+      return true;
+    } catch {
+      notify.error("Failed to send image.");
+      return false;
+    }
+  };
+
+  const handleSendGif = async (url: string): Promise<boolean> => {
+    try {
+      const newMsg = await chatApi.sendGif(matchId, url);
+      setMessages((prev) => [...prev, newMsg]);
+      return true;
+    } catch {
+      notify.error("Failed to send GIF.");
+      return false;
+    }
+  };
+
   const handleUnmatch = async () => {
     setUnmatching(true);
     try {
@@ -281,7 +303,12 @@ function Chat() {
       </div>
 
       {/* Composer */}
-      <MessageComposer onSend={handleSend} disabled={sending} />
+      <MessageComposer
+        onSend={handleSend}
+        onSendImage={handleSendImage}
+        onSendGif={handleSendGif}
+        disabled={sending}
+      />
 
       <ConfirmDialog
         open={confirmUnmatch}

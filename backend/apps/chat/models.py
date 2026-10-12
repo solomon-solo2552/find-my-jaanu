@@ -26,6 +26,17 @@ class Message(models.Model):
     is_read = models.BooleanField(default=False)
     read_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(
+        upload_to="chat/images/%Y/%m/",
+        null=True,
+        blank=True,
+    )
+    image_url = models.URLField(
+        max_length=500,
+        null=True,
+        blank=True,
+        help_text="External image URL (e.g., Giphy GIF).",
+    )
 
     class Meta:
         db_table = "messages"
