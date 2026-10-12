@@ -70,3 +70,4 @@ run-tests.bat   # Windows
 - **Day 18.6 (✅):** Landing page — hero, social proof, features, how-it-works, CTA banner, footer.
 - **Day 18.7 (✅):** Polish — confetti on match, subtle sounds, gradient accents, warmer copy.
 - **Day 18.8 (✅):** Chat bubbles now correctly color and align by sender (pink right / white left).
+- **Part 18.9 (I) (✅):** Chat media — image uploads, emoji picker, GIF search via Giphy.
