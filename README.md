@@ -73,3 +73,4 @@ run-tests.bat   # Windows
 - **Day 18.9 (I) (✅):** Chat media — image uploads, emoji picker, GIF search via Giphy.
 - **Day 18.9 (II) (✅):** Chat — delete for me/everyone, sent/seen indicators, hidden dev badge.
 - **Day 18.9 (III) (✅):** UX fixes — multi-emoji, chats shortcut, scroll-behavior, public-preview 500.
+- **Day 18.9 (IV) (✅):** Navbar overhaul (user dropdown, 4 primary links, mobile menu), matches tabs, emoji multi-select, public-preview fix, scroll-behavior warning.
