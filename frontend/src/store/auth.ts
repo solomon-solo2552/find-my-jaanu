@@ -8,23 +8,33 @@ export interface User {
   created_at: string;
 }
 
+export interface ProfileLite {
+  id: string;
+  display_name: string;
+  is_featured: boolean;
+  photo: string | null;
+}
+
 interface AuthState {
   user: User | null;
   profileId: string | null;
+  profile: ProfileLite | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   setAuth: (user: User, access: string, refresh: string) => void;
   setUser: (user: User | null) => void;
+  setProfile: (profile: ProfileLite | null) => void;    // ← was missing
+  setProfileId: (id: string | null) => void;
   logout: () => void;
   hydrateFromStorage: () => void;
-  setProfileId: (id: string | null) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   profileId: null,
+  profile: null,
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
@@ -45,6 +55,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   setUser: (user) => set({ user, isAuthenticated: !!user, isLoading: false }),
+
+  setProfile: (profile) => set({ profile }),    // ← was missing
+
   setProfileId: (id) => set({ profileId: id }),
 
   logout: () => {
@@ -55,6 +68,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({
       user: null,
       profileId: null,
+      profile: null,    // ← was missing
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,

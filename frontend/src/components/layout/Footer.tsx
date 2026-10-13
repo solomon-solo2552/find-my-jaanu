@@ -53,8 +53,8 @@ export function Footer() {
                         title="Product"
                         links={[
                             { label: "Discover", href: "/discover" },
-                            { label: "Daily Picks", href: "/daily" },
-                            { label: "Matches", href: "/matches" },
+                            { label: "Daily", href: "/daily" },
+                            { label: "Chats", href: "/matches" },
                             { label: "Likes", href: "/likes" },
                         ]}
                     />

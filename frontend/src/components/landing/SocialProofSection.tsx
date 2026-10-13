@@ -34,7 +34,7 @@ export function SocialProofSection() {
     }, []);
 
     return (
-        <section className="bg-white border-y border-gray-100 py-14">
+        <section className="bg-white border-y border-gray-100 py-10">
             <div className="max-w-6xl mx-auto px-4 text-center">
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6">
                     Trusted by 10,000+ Jaanus across India

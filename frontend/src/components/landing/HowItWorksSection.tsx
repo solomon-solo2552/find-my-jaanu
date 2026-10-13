@@ -28,10 +28,10 @@ export function HowItWorksSection() {
     return (
         <section
             id="how-it-works"
-            className="py-16 sm:py-24 bg-white"
+            className="py-12 sm:py-16 bg-white"
         >
             <div className="max-w-5xl mx-auto px-4">
-                <div className="text-center mb-14">
+                <div className="text-center mb-10">
                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
                         How it works
                     </h2>

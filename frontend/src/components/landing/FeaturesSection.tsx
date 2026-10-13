@@ -36,9 +36,9 @@ const FEATURES = [
 
 export function FeaturesSection() {
     return (
-        <section className="py-16 sm:py-24 bg-gradient-to-b from-white to-pink-50">
+        <section className="py-12 sm:py-16 bg-gradient-to-b from-white to-pink-50">
             <div className="max-w-6xl mx-auto px-4">
-                <div className="text-center mb-14">
+                <div className="text-center mb-10">
                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
                         Why you&apos;ll love it here
                     </h2>

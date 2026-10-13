@@ -87,7 +87,7 @@ export function Navbar() {
 
         {/* Desktop primary nav */}
         {isAuthenticated && (
-          <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
+          <div className="hidden sm:flex items-center gap-1 flex-1 justify-center">
             {PRIMARY_LINKS.map((link) => {
               const count = badges[link.href] || 0;
               const active = isActive(link.href);
@@ -120,7 +120,7 @@ export function Navbar() {
             <>
               <button
                 onClick={() => setMobileOpen((v) => !v)}
-                className="md:hidden p-2 rounded-full hover:bg-gray-100"
+                className="sm:hidden p-2 rounded-full hover:bg-gray-100"
                 aria-label="Toggle menu"
               >
                 {mobileOpen ? (
@@ -148,7 +148,7 @@ export function Navbar() {
 
       {/* Mobile dropdown */}
       {isAuthenticated && mobileOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white">
+        <div className="sm:hidden border-t border-gray-100 bg-white">
           <div className="px-4 py-2 space-y-1">
             {PRIMARY_LINKS.map((link) => {
               const count = badges[link.href] || 0;

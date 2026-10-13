@@ -15,7 +15,7 @@ export function HeroSection() {
             <div className="absolute top-20 -left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" />
             <div className="absolute top-40 -right-20 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" />
 
-            <div className="relative max-w-6xl mx-auto px-4 py-16 sm:py-24 grid lg:grid-cols-2 gap-12 items-center">
+            <div className="relative max-w-6xl mx-auto px-4 py-12 sm:py-20 grid lg:grid-cols-2 gap-12 items-center">
                 {/* Left: Copy */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
