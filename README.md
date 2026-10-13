@@ -72,3 +72,4 @@ run-tests.bat   # Windows
 - **Day 18.8 (✅):** Chat bubbles now correctly color and align by sender (pink right / white left).
 - **Day 18.9 (I) (✅):** Chat media — image uploads, emoji picker, GIF search via Giphy.
 - **Day 18.9 (II) (✅):** Chat — delete for me/everyone, sent/seen indicators, hidden dev badge.
+- **Day 18.9 (III) (✅):** UX fixes — multi-emoji, chats shortcut, scroll-behavior, public-preview 500.
