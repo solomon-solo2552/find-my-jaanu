@@ -263,20 +263,36 @@ class PublicStatsView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        profiles = Profile.objects.filter(is_visible=True).exclude(
-            photos__isnull=True
-        ).prefetch_related("photos").distinct()[:12]
+        try:
+            profiles = (
+                Profile.objects.filter(is_visible=True)
+                .exclude(photos__isnull=True)
+                .prefetch_related("photos")
+                .distinct()[:12]
+            )
 
-        data = [
-            {
-                "id": str(p.id),
-                "display_name": p.diplay_name,
-                "is_featured": p.is_featured,
-                "photo": (
-                    (p.photos.filter(is_primary=True).first() or p.photos.first()).image.url
-                    if p.photos.exists() else None
-                ),
-            }
-            for p in profiles
-        ]
-        return Response({"results": data})
+            results = []
+            for p in profiles:
+                primary = p.photos.filter(is_primary=True) or p.photos.first()
+                photo_url = None
+                if primary and primary.image:
+                    try:
+                        photo_url = primary.image.url
+                    except (ValueError, FileNotFoundError):
+                        photo_url = None
+
+                results.append({
+                    "id": str(p.id),
+                    "display_name": p.display_name,
+                    "is_featured": p.is_featured,
+                    "photo": photo_url,
+                })
+
+            return Response({"results": results})
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return Response(
+                {"detail": f"Server error: {str(e)}", "results": []},
+                status=500,
+            )

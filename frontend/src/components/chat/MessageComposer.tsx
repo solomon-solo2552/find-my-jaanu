@@ -76,7 +76,6 @@ export function MessageComposer({
 
   const handleEmojiSelect = (emoji: string) => {
     setText((t) => t + emoji);
-    setEmojiOpen(false);
     textareaRef.current?.focus();
   };
 

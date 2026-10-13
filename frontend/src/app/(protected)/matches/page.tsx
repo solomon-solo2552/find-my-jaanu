@@ -147,7 +147,7 @@ function Matches() {
 
             {/* Conversations list */}
             {conversations.length > 0 && (
-              <div>
+              <div id="messages">
                 <h2 className="text-sm font-semibold text-gray-700 mb-3">
                   Messages ({conversations.length})
                 </h2>

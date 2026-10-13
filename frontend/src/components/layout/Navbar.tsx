@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, LogOut, Settings, Sparkles } from "lucide-react";
+import { Heart, LogOut, Settings, Sparkles, MessageCircle } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/auth";
 import { matchesApi } from "@/lib/matches";
@@ -92,6 +92,18 @@ export function Navbar() {
                 {likesCount > 0 && (
                   <span className="absolute -top-2 -right-3 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
                     {likesCount > 9 ? "9+" : likesCount}
+                  </span>
+                )}
+              </Link>
+              <Link
+                href="/matches#messages"
+                className="relative text-sm text-gray-700 hover:text-pink-600 font-medium flex items-center gap-1"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span className="hidden sm:inline">Chats</span>
+                {newMatchCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-pink-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    {newMatchCount > 9 ? "9+" : newMatchCount}
                   </span>
                 )}
               </Link>
