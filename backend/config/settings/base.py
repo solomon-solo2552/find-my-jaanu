@@ -1,3 +1,4 @@
+import dj_database_url  
 from pathlib import Path
 from datetime import timedelta
 from decouple import config, Csv
@@ -66,15 +67,25 @@ TEMPLATES = [{
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "find_my_jaanu",
+#         "USER": "jaanu_user",
+#         "PASSWORD": "jaanu_pass",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "find_my_jaanu",
-        "USER": "jaanu_user",
-        "PASSWORD": "jaanu_pass",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
+    "default": dj_database_url.config(
+        default=config(
+            "DATABASE_URL",
+            default="postgres://jaanu_user:jaanu_pass@localhost:5432/find_my_jaanu",
+        ),
+        conn_max_age=600,
+    )
 }
 
 AUTH_USER_MODEL = "users.User"

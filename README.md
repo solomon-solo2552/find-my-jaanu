@@ -1,5 +1,7 @@
 # Find My JAANU 💘
 
+![Tests](https://github.com/solomon-solo2552/find-my-jaanu/actions/workflows/test.yml/badge.svg)
+
 A full-stack social matching platform built with **Next.js**, **Django**, and **PostgreSQL**.
 
 > ⚠️ Personal learning project — not intended for production use.
